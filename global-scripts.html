@@ -12,5 +12,27 @@
         });
       }
     });
+
+    // Blur reveal
+    gsap.utils.toArray("[blur-reveal]").forEach((element) => {
+      const split = new SplitText(element, { type: "words" });
+      let tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: element,
+          start: "top 90%",
+          end: "bottom 50%",
+          toggleActions: "play none none none",
+        },
+      });
+      tl.from(split.words, {
+        y: "10%",
+        skewX: "-20deg",
+        filter: "blur(8px)",
+        opacity: 0,
+        duration: 1,
+        ease: "power1.inOut",
+        stagger: window.innerWidth < 768 ? 0.15 : 0.075,
+      });
+    });
   });
 </script>

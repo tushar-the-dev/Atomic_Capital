@@ -42,60 +42,58 @@
     text-decoration: none;
   }
 
-
-.marquee-wrapper {
-  width: 100%;
-  overflow: hidden;
-  white-space: nowrap;
-  box-sizing: border-box;
-  position: relative;
-}
-.marquee-wrapper:before {
-  content: "";
-  background: linear-gradient(to right, #fff 0%, rgba(255, 255, 255, 0) 100%);
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 120px;
-  height: 100%;
-  z-index: 9;
-}
-.marquee-wrapper:after {
-  content: "";
-  background: linear-gradient(to left, #fff 0%, rgba(255, 255, 255, 0) 100%);
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 120px;
-  height: 100%;
-  z-index: 9;
-}
-.marquee-content {
-  display: flex;
-  align-items: center;
-  animation: marquee-scroll 15s linear infinite;
-}
-.marquee-content:hover {
-  animation-play-state: paused;
-}
-
-.marquee-content.reverse {
-  animation-direction: reverse;
-}
-
-
-@keyframes marquee-scroll {
-  from {
-    transform: translateX(0);
+  .marquee-wrapper {
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    box-sizing: border-box;
+    position: relative;
   }
-  to {
-    transform: translateX(-50%);
+  .marquee-wrapper:before {
+    content: "";
+    background: linear-gradient(to right, #fff 0%, rgba(255, 255, 255, 0) 100%);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 120px;
+    height: 100%;
+    z-index: 9;
   }
-}
+  .marquee-wrapper:after {
+    content: "";
+    background: linear-gradient(to left, #fff 0%, rgba(255, 255, 255, 0) 100%);
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 120px;
+    height: 100%;
+    z-index: 9;
+  }
+  .marquee-content {
+    display: flex;
+    align-items: center;
+    animation: marquee-scroll 15s linear infinite;
+  }
+  .marquee-content:hover {
+    animation-play-state: paused;
+  }
 
-.cta-section-wrapper .cta-sec-bg{
-  mix-blend-mode: multiply;
-}
+  .marquee-content.reverse {
+    animation-direction: reverse;
+  }
+
+  @keyframes marquee-scroll {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  .cta-section-wrapper .cta-sec-bg {
+    mix-blend-mode: multiply;
+  }
 
   @media screen and (min-width: 992px) and (max-width: 1440px) {
     html {

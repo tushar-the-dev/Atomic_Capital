@@ -1,111 +1,72 @@
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
-<script
-  defer
-  src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.js"
-></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/SplitText.min.js"></script>
 
-<!-- Finsweet Attributes -->
-<script
-  async
-  type="module"
-  src="https://cdn.jsdelivr.net/npm/@finsweet/attributes@2/attributes.js"
-  fs-list
-></script>
 
-$(document).ready(function () { // fade in animation var elements =
-gsap.utils.toArray('[gsap-fade-in]') elements.forEach(function (element) { var
-t1 = gsap.timeline({ scrollTrigger: { trigger: element, start: 'top 80%', end:
-'bottom top', toggleActions: 'play none play none' }, }); t1.fromTo(element, {
-opacity: 0, y: '40' }, { opacity: 1, y: '0%', duration: 1.2, ease: "power2.out"
-}) })
 
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    gsap.registerPlugin(ScrollTrigger);
-
-    // Accessibility
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      gsap.set("[data-fade]", { opacity: 1, y: 0 });
-    } else {
-      ScrollTrigger.batch("[data-fade]", {
-        start: "top 90%", // ✅ EXACT requirement
-        once: true, // animate once per reload
-        interval: 0.1, // grouping window (controls stagger feel)
-
-        onEnter: (batch) => {
-          gsap.to(batch, {
-            opacity: 1,
-            y: 0,
-            duration: 1.2,
-            ease: "power2.out",
-            stagger: 0.2,
-            overwrite: true,
-          });
-        },
-      });
+<script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@latest/bundled/lenis.js"></script>
+<script type="text/javascript">
+    function preventScroll(e){
+        e.preventDefault(); e.stopPropagation(); return false;
     }
-  });
+
+    // lenis
+   const lenis = new Lenis()
+   lenis.on('scroll', (e) => {})
+   function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+   requestAnimationFrame(raf)
+   lenis.stop();
+ 
+  // DOM ready replacement for $(document).ready()
+document.addEventListener("DOMContentLoaded", () => {
+  lenis.start();
+});
+  
 </script>
 
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    gsap.registerPlugin(ScrollTrigger);
+   
+<script type="text/javascript">
+document.addEventListener("DOMContentLoaded", () => {
+  gsap.registerPlugin(ScrollTrigger);
 
-    // Reduced motion
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      gsap.set("[data-fade]", { opacity: 1, y: 0 });
-    } else {
-      ScrollTrigger.batch("[    ]", {
-        start: "top 90%",
-        once: true,
-        interval: 0.1,
+  const prefersReduced = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
 
-        onEnter: (batch) => {
-          gsap.to(batch, {
-            opacity: 1,
-            y: 0,
-            duration: 1.2,
-            ease: "power2.out",
-            stagger: 0.2,
-            overwrite: true,
-          });
-        },
+  const sections = gsap.utils.toArray("section");
 
-        // 🔑 THIS FIXES MID-PAGE REFRESH
-        onEnterBack: (batch) => {
-          gsap.to(batch, {
-            opacity: 1,
-            y: 0,
-            duration: 1.2,
-            ease: "power2.out",
-            stagger: 0.2,
-            overwrite: true,
-          });
-        },
-      });
-
-      // 🔑 Force ScrollTrigger to evaluate current scroll position
-      window.addEventListener("load", () => {
-        ScrollTrigger.refresh();
-      });
-    }
-  });
-</script>
-<!-- 
-  /* ===== Fade-in initial state ===== */
-    [data-fade] {
-    opacity: 0;
-    transform: translateY(3.75rem);
-    will-change: opacity, transform;
+  if (prefersReduced) {
+    gsap.set("[data-fade]", { opacity: 1, y: 0 });
+    return;
   }
 
-    /* ===== Reduced motion ===== */
-   @media (prefers-reduced-motion: reduce) {
-    [data-fade] {
-      opacity: 1 !important;
-      transform: none !important;
-    }
-  } -->
+  sections.forEach(section => {
+    const items = section.querySelectorAll("[data-fade]");
+
+    // Hide initially (JS-loaded safe)
+    gsap.set(items, { opacity: 0, y: 60 });
+
+    ScrollTrigger.batch(items, {
+      start: "top 90%",
+      once: true,
+
+      onEnter: batch => {
+        gsap.to(batch, {
+          opacity: 1,
+          y: 0,
+          duration: 1,
+          ease: "power2.out",
+          stagger: 0.3,
+          overwrite: true
+        });
+      }
+    });
+  });
+
+  // 🔑 THIS is what fixes mid-page refresh
+  ScrollTrigger.refresh(true);
+});
+</script>
