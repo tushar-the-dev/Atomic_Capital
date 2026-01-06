@@ -1,0 +1,16 @@
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const allSlides = document.querySelectorAll(".marquee-content");
+    const cloneCount = 3;
+
+    allSlides.forEach((slides) => {
+      for (let i = 0; i < cloneCount; i++) {
+        const children = Array.from(slides.children);
+
+        children.forEach((child) => {
+          slides.appendChild(child.cloneNode(true));
+        });
+      }
+    });
+  });
+</script>

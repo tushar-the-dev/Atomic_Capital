@@ -1,0 +1,50 @@
+  
+<script type="text/javascript">
+ document.addEventListener("DOMContentLoaded", function () {
+   gsap.registerPlugin(ScrollTrigger);
+
+const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+const items = gsap.utils.toArray("[data-fade]");
+
+if (prefersReduced) {
+  gsap.set(items, { opacity: 1, y: 0 });
+} else {
+
+  // 🔑 Hide AFTER JS loads (no blank page)
+  gsap.set(items, { opacity: 0, y: 60 });
+
+  ScrollTrigger.batch(items, {
+    start: "top 90%",
+    once: true,
+    interval: 0.1,
+
+    onEnter: batch => {
+      gsap.to(batch, {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        ease: "power2.out",
+        stagger: 0.3,
+        overwrite: true
+      });
+    },
+
+    onEnterBack: batch => {
+      gsap.to(batch, {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        ease: "power2.out",
+        stagger: 0.3,
+        overwrite: true
+      });
+    }
+  });
+
+  // 🔑 Force sync immediately
+  ScrollTrigger.refresh();
+}
+  });
+
+</script>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>SVG Draw One by One</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+
+    <style>
+      body {
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+      }
+
+      svg {
+        width: 220px;
+        height: auto;
+        display: block; /* IMPORTANT: removes extra space */
+      }
+
+      svg path {
+        fill: none;
+        stroke: #262d29;
+        stroke-width: 0.733333;
+      }
+    </style>
+  </head>
+  <body>
+    <svg
+    class="approach-svg"
+      width="120"
+      height="120"
+      viewBox="0 0 120 120"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M25.6016 62.3033C25.6016 44.2278 40.2766 29.5527 58.3521 29.5527C76.4277 29.5527 91.1027 44.2278 91.1027 62.3033M58.3521 76.6734C43.2773 76.6734 30.746 87.5702 28.1985 101.918H88.5067C85.967 87.5699 73.4347 76.6734 58.3521 76.6734ZM58.3521 72.9087C66.3747 72.9087 72.9079 66.3678 72.9079 58.3527C72.9079 50.3379 66.3747 43.797 58.3521 43.797C50.3376 43.797 43.8051 50.3381 43.8051 58.3527C43.8051 66.3676 50.3376 72.9087 58.3521 72.9087Z"
+        stroke="#262D29"
+        stroke-width="0.733333"
+      />
+      <path
+        d="M11.4106 53.2856L15.3525 58.3532M11.4106 63.4209L15.3525 58.3532M0 58.3532H15.3525"
+        stroke="#262D29"
+        stroke-width="0.733333"
+        class="arrow left"
+      />
+      <path
+        d="M29.5893 21.91L28.0748 27.5622M28.0748 27.5622L17.9375 17.4248M28.0748 27.5622L22.4225 29.0768"
+        stroke="#262D29"
+        stroke-width="0.733333"
+        class="arrow top-left"
+      />
+      <path
+        d="M58.3527 0V14.3363M63.4202 11.4106L58.3527 14.3363M53.2852 11.4106L58.3527 14.3363"
+        stroke="#262D29"
+        stroke-width="0.733333"
+        class="arrow top"
+      />
+      <path
+        d="M87.4219 21.91L88.9364 27.5622M88.9364 27.5622L99.0737 17.4248M88.9364 27.5622L94.5886 29.0768"
+        stroke="#262D29"
+        stroke-width="0.733333"
+        class="arrow top-right"
+      />
+      <path
+        d="M116.707 58.3532L102.371 58.3533M105.297 63.4209L102.371 58.3533M105.297 53.2856L102.371 58.3533"
+        stroke="#262D29"
+        stroke-width="0.733333"
+        class="arrow right"
+      />
+    </svg>
+
+    <script>
+      //Approach-svg
+      document.addEventListener("DOMContentLoaded", function () {
+        const svg = document.querySelector(".approach-svg");
+        // const arcs = document.querySelectorAll(".approach-svg .focus-arc");
+        const arrows = document.querySelectorAll(".approach-svg .arrow");
+
+        let isHovering = false;
+        let hasPlayedOnce = false;
+
+        const tl = gsap.timeline({
+          paused: true,
+          repeat: 1,
+          yoyo: true,
+          defaults: { ease: "sine.inOut" },
+          onComplete() {
+            hasPlayedOnce = true;
+
+            // 🔁 Loop ONLY if hover is still active
+            if (isHovering) {
+              // keep looping while hovered
+              tl.restart();
+            }
+          },
+        });
+
+        // Move arrows toward center
+        tl.to(".approach-svg .arrow.left", { x: "0.4rem" }, 0)
+          .to(".approach-svg .arrow.right", { x: "-0.4rem" }, 0)
+          .to(".approach-svg .arrow.top", { y: "0.4rem" }, 0)
+          .to(".approach-svg .arrow.top-left", { x: "0.3rem", y: "0.3rem" }, 0)
+          .to(".approach-svg .arrow.top-right", { x: "-0.3rem", y: "0.3rem" }, 0);
+
+        /* -----------------------------
+     PLAY ON VIEW (ONCE)
+  ----------------------------- */
+        const observer = new IntersectionObserver(
+          ([entry]) => {
+            if (entry.isIntersecting && !hasPlayedOnce) {
+              tl.play();
+              observer.disconnect();
+            }
+          },
+          { threshold: 0.6 }
+        );
+
+        observer.observe(svg);
+
+        /* -----------------------------
+     HOVER CONTROL
+  ----------------------------- */
+        svg.addEventListener("mouseenter", () => {
+          isHovering = true;
+
+          // If timeline already finished, start looping
+          if (!tl.isActive() && hasPlayedOnce) {
+            tl.repeat(-1);
+            tl.restart();
+          }
+        });
+
+        svg.addEventListener("mouseleave", () => {
+          isHovering = false;
+          tl.repeat(1);
+        //   console.log(tl.isActive);
+        });
+      });
+    </script>
+  </body>
+</html>

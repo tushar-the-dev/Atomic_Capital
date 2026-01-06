@@ -1,0 +1,385 @@
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const remToPx = parseFloat(
+      getComputedStyle(document.documentElement).fontSize
+    );
+    const spaceBetweenInRem = 1;
+    const spaceBetweenInPx = remToPx * spaceBetweenInRem;
+
+    const upcomingEvents = new Swiper(".portfolio-swiper", {
+      wrapperClass: "portfolio-swiper-wrapper",
+      slideClass: "portfolio-slide",
+
+      slidesPerView: "auto",
+      spaceBetween: spaceBetweenInPx,
+
+      centeredSlides: true,
+      centeredSlidesBounds: false, // ❗ must be false for loop
+
+      loop: true,
+      //   loopAdditionalSlides: 1,     // helps with auto widths
+      watchSlidesProgress: true,
+
+      pagination: {
+        el: ".common-pagination",
+        clickable: true,
+      },
+    });
+  });
+
+  document.addEventListener("DOMContentLoaded", function () {
+    function fitText(el) {
+      const parent = el.parentElement;
+      if (!parent) return;
+
+      let fontSize = parent.clientWidth;
+
+      el.style.fontSize = fontSize + "px";
+
+      while (el.scrollWidth > parent.clientWidth) {
+        fontSize--;
+        el.style.fontSize = fontSize + "px";
+      }
+    }
+
+    function fitAll() {
+      document.querySelectorAll(".fit-text").forEach(fitText);
+    }
+
+    // Run after load (important for fonts)
+    window.addEventListener("load", fitAll);
+    window.addEventListener("resize", fitAll);
+  });
+
+  document.addEventListener("DOMContentLoaded", function () {
+    gsap.registerPlugin(ScrollTrigger);
+
+    const cards = document.querySelectorAll(".engagement-model-card");
+    const progressBar = document.querySelector(
+      "#engagement-model-progress-bar"
+    );
+    const contentItems = document.querySelectorAll(
+      ".engagement-model-content-txt"
+    );
+    const TOTAL_CARDS = cards.length;
+
+    // Calculate progress per card
+    const progressPerCard = 100 / TOTAL_CARDS;
+
+    // Loop through cards to create scroll triggers
+    cards.forEach((card, index) => {
+      ScrollTrigger.create({
+        trigger: card,
+        start: `-${card.offsetHeight} top`, // when card top reaches top + offset
+        end: () => `+=${card.offsetHeight}`, // scroll distance for this card
+        scrub: true,
+        onUpdate: (self) => {
+          // Progress bar fills according to which card
+          const progress = ((index + self.progress) / TOTAL_CARDS) * 100;
+          gsap.to(progressBar, {
+            height: `${progress}%`,
+            ease: "none",
+            overwrite: true,
+          });
+
+          // Update active text
+          contentItems.forEach((li, i) =>
+            li.classList.toggle("active", i === index)
+          );
+        },
+      });
+    });
+  });
+
+  //FLower-pot-svg
+  document.addEventListener("DOMContentLoaded", function () {
+    const cardContainer = document.getElementById("stage-card");
+    const svg = document.querySelector(".flower-pot-svg");
+    const paths = document.querySelectorAll(".flower-pot-svg path");
+
+    let isHovering = false;
+    let hasPlayedOnce = false;
+
+    const tl = gsap.timeline({
+      paused: true,
+      defaults: { ease: "power1.inOut" },
+      onComplete() {
+        hasPlayedOnce = true;
+
+        // 🔁 Loop ONLY if hover is still active
+        if (isHovering) {
+          tl.restart();
+        }
+      },
+    });
+
+    paths.forEach((path, i) => {
+      const length = path.getTotalLength();
+      const isLast = i === paths.length - 1;
+
+      gsap.set(path, {
+        strokeDasharray: length,
+        strokeDashoffset: length,
+      });
+
+      tl.to(
+        path,
+        {
+          strokeDashoffset: 0,
+          duration: isLast ? 1 : 0.7,
+        },
+        i === 0 ? 0 : "-=0.15"
+      );
+    });
+
+    /* -----------------------------
+     PLAY ON VIEW (ONCE)
+  ----------------------------- */
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasPlayedOnce) {
+          tl.play();
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.6 }
+    );
+
+    observer.observe(svg);
+
+    /* -----------------------------
+     HOVER CONTROL
+  ----------------------------- */
+    cardContainer.addEventListener("mouseenter", () => {
+      isHovering = true;
+
+      // If timeline already finished, start looping
+      if (!tl.isActive() && hasPlayedOnce) {
+        tl.restart();
+      }
+    });
+
+    cardContainer.addEventListener("mouseleave", () => {
+      isHovering = false;
+      // Do nothing else — let current iteration finish
+    });
+  });
+
+  //Gyroscope-svg
+  document.addEventListener("DOMContentLoaded", function () {
+    const svg = document.getElementById("gyroscope");
+    const gyroscopeContainer = document.getElementById("gyroscopeContainer");
+
+    let isHovering = false;
+    let hasPlayedOnce = false;
+
+    // Initial state
+    gsap.set(svg, {
+      rotation: 0,
+      transformOrigin: "50% 50%",
+    });
+
+    const tl = gsap.timeline({
+      paused: true,
+      onComplete() {
+        hasPlayedOnce = true;
+
+        // 🔁 Loop ONLY if hover is active
+        if (isHovering) {
+          tl.restart();
+        }
+      },
+    });
+
+    /* -----------------------------
+       ONE FULL ROTATION
+    ----------------------------- */
+    tl.to(svg, {
+      rotation: 360,
+      duration: 3.5,
+      ease: "linear",
+    });
+
+    /* -----------------------------
+       PLAY ON VIEW (ONCE)
+    ----------------------------- */
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasPlayedOnce) {
+          tl.play();
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.6 }
+    );
+
+    observer.observe(svg);
+
+    /* -----------------------------
+       HOVER CONTROL
+    ----------------------------- */
+    gyroscopeContainer.addEventListener("mouseenter", () => {
+      isHovering = true;
+
+      // If finished already, start looping
+      if (!tl.isActive() && hasPlayedOnce) {
+        tl.restart();
+      }
+    });
+
+    gyroscopeContainer.addEventListener("mouseleave", () => {
+      isHovering = false;
+      // Let current rotation finish naturally
+    });
+  });
+
+  //Focus-svg
+  document.addEventListener("DOMContentLoaded", function () {
+    const focusContainer = document.getElementById("focusContainer");
+    const svg = document.querySelector(".focus-svg");
+    const arcs = document.querySelectorAll(".focus-svg .focus-arc");
+    const arrow = document.querySelectorAll(".focus-svg .focus-arrow");
+
+    let isHovering = false;
+    let hasPlayedOnce = false;
+
+    const tl = gsap.timeline({
+      paused: true,
+      defaults: { ease: "power1.inOut" },
+      onComplete() {
+        hasPlayedOnce = true;
+
+        // 🔁 Loop ONLY if hover is still active
+        if (isHovering) {
+          tl.restart();
+        }
+      },
+    });
+
+    [...arcs, ...arrow].forEach((arc, i) => {
+      const length = arc.getTotalLength();
+      //   const isLast = i === paths.length - 1;
+
+      gsap.set(arc, {
+        strokeDasharray: length,
+        strokeDashoffset: length,
+      });
+    });
+
+    tl.to(
+      arcs,
+      {
+        strokeDashoffset: 0,
+        duration: 1,
+        //   duration: isLast ? 1 : 1,
+      }
+      // i === 0 ? 0 : "-=0.15"
+    );
+
+    arrow.forEach((i, index) => {
+      const isLast = index === arrow.length - 1;
+      tl.to(i, {
+        strokeDashoffset: 0,
+        duration: isLast ? 0.5 : 1,
+      });
+    });
+    /* -----------------------------
+     PLAY ON VIEW (ONCE)
+  ----------------------------- */
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasPlayedOnce) {
+          tl.play();
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.6 }
+    );
+
+    observer.observe(svg);
+
+    /* -----------------------------
+     HOVER CONTROL
+  ----------------------------- */
+    focusContainer.addEventListener("mouseenter", () => {
+      isHovering = true;
+
+      // If timeline already finished, start looping
+      if (!tl.isActive() && hasPlayedOnce) {
+        tl.restart();
+      }
+    });
+
+    focusContainer.addEventListener("mouseleave", () => {
+      isHovering = false;
+      // Do nothing else — let current iteration finish
+    });
+  });
+
+  //Approach-svg
+  document.addEventListener("DOMContentLoaded", function () {
+    const approadContainer = document.getElementById('approachContainer')
+    const svg = document.querySelector(".approach-svg");
+    const arrows = document.querySelectorAll(".approach-svg .arrow");
+
+    let isHovering = false;
+    let hasPlayedOnce = false;
+
+    const tl = gsap.timeline({
+      paused: true,
+      repeat: 1,
+      yoyo: true,
+      defaults: { ease: "sine.inOut" },
+      onComplete() {
+        hasPlayedOnce = true;
+
+        // 🔁 Loop ONLY if hover is still active
+        if (isHovering) {
+          // keep looping while hovered
+          tl.restart();
+        }
+      },
+    });
+
+    // Move arrows toward center
+    tl.to(".approach-svg .arrow.left", { x: "0.4rem" }, 0)
+      .to(".approach-svg .arrow.right", { x: "-0.4rem" }, 0)
+      .to(".approach-svg .arrow.top", { y: "0.4rem" }, 0)
+      .to(".approach-svg .arrow.top-left", { x: "0.3rem", y: "0.3rem" }, 0)
+      .to(".approach-svg .arrow.top-right", { x: "-0.3rem", y: "0.3rem" }, 0);
+
+    /* -----------------------------
+     PLAY ON VIEW (ONCE)
+  ----------------------------- */
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasPlayedOnce) {
+          tl.play();
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.6 }
+    );
+
+    observer.observe(svg);
+
+    /* -----------------------------
+     HOVER CONTROL
+  ----------------------------- */
+    approadContainer.addEventListener("mouseenter", () => {
+      isHovering = true;
+
+      // If timeline already finished, start looping
+      if (!tl.isActive() && hasPlayedOnce) {
+        tl.repeat(-1);
+        tl.restart();
+      }
+    });
+
+    approadContainer.addEventListener("mouseleave", () => {
+      isHovering = false;
+      tl.repeat(1);
+      //   console.log(tl.isActive);
+    });
+  });
+</script>

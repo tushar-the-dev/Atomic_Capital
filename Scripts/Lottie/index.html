@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+</head>
+<style>
+  body {
+  margin: 0;
+}
+
+.lottie-section {
+  height: 300vh; /* scroll distance */
+}
+
+.atomic-lottie-container {
+  width: 100%;
+  height: 100vh;
+}
+
+.spacer{
+  background-color: lightblue;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+  
+</style>
+<body>
+  <section class="spacer"></section>
+<section class="lottie-section">
+  <div class="lottie-container">
+    <div class="atomic-lottie-container"></div>
+  </div>
+  </section>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+const animation = lottie.loadAnimation({
+  container: document.querySelector(".atomic-lottie-container"),
+  renderer: "svg",
+  loop: false,
+  autoplay: false,
+  path: "./../../hosting/Atomic-lottie.json"
+});
+
+const container = document.querySelector(".atomic-lottie-container");
+const halfHeight = container.offsetHeight / 2;
+
+animation.addEventListener("DOMLoaded", () => {
+  const totalFrames = animation.totalFrames;
+
+  const playhead = { frame: 0 };
+
+  gsap.to(playhead, {
+    frame: totalFrames - 1,
+    ease: "none",
+    scrollTrigger: {
+      trigger: ".lottie-section",
+      start: `top top`,
+      end: "bottom bottom",
+      scrub: true,
+      pin: ".atomic-lottie-container",
+      anticipatePin: 1,
+      markers: true
+    },
+    onUpdate: () => {
+      animation.goToAndStop(playhead.frame, true);
+    }
+  });
+
+  ScrollTrigger.refresh();
+});
+</script>
+
+</body>
+</html>

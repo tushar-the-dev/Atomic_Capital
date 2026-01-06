@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>SVG Draw One by One</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+
+    <style>
+      body {
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+      }
+
+      svg {
+        width: 220px;
+        height: auto;
+        display: block; /* IMPORTANT: removes extra space */
+      }
+
+      svg path {
+        fill: none;
+        stroke: #262d29;
+        stroke-width: 0.733333;
+      }
+    </style>
+  </head>
+  <body>
+    <svg
+      class="focus-svg"
+      width="120"
+      height="108"
+      viewBox="0 0 120 108"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        class="focus-arc"
+        d="M61.4258 39.5499C59.1192 38.2866 56.4737 37.5686 53.6611 37.5686C44.6946 37.5686 37.4258 44.8655 37.4258 53.8666C37.4258 62.8678 44.6946 70.1646 53.6611 70.1646C62.6276 70.1646 69.8964 62.8678 69.8964 53.8666C69.8964 52.7753 69.7895 51.7091 69.5858 50.6779"
+        stroke="#262D29"
+        stroke-width="0.733333"
+      />
+      <path
+        class="focus-arc"
+        d="M77.9216 27.6483C71.5588 21.7122 63.0321 18.082 53.6607 18.082C33.9734 18.082 18.0137 34.1034 18.0137 53.8668C18.0137 73.6302 33.9734 89.6516 53.6607 89.6516C73.3481 89.6516 89.3078 73.6302 89.3078 53.8668C89.3078 48.4183 88.0948 43.2541 85.9251 38.6317"
+        stroke="#262D29"
+        stroke-width="0.733333"
+      />
+      <path
+        class="focus-arc"
+        d="M92.3084 17.0278C82.598 6.7653 68.874 0.366699 53.6613 0.366699C24.2278 0.366699 0.367188 24.3195 0.367188 53.8667C0.367188 83.4139 24.2278 107.367 53.6613 107.367C83.0948 107.367 106.955 83.4139 106.955 53.8667C106.955 44.6297 104.624 35.9394 100.518 28.3568"
+        stroke="#262D29"
+        stroke-width="0.733333"
+      />
+      <!-- <path class="focus-arrow" d="M56.6617 51.3927C55.9496 50.5236 54.8701 49.9693 53.6617 49.9693C51.5175 49.9693 49.7793 51.7143 49.7793 53.8667C49.7793 56.0191 51.5175 57.764 53.6617 57.764C55.8058 57.764 57.544 56.0191 57.544 53.8667C57.544 52.9274 57.213 52.0657 56.6617 51.3927ZM56.6617 51.3927L104.132 17.019M104.132 17.019V0.366699M104.132 17.019L120.368 23.7508" stroke="#262D29" stroke-width="0.733333"/> -->
+      <path
+        class="focus-arrow"
+        d="M104.133 0.366699V17.019L120.369 23.7508"
+        stroke="#262D29"
+        stroke-width="0.733333"
+      />
+      <path
+        class="focus-arrow"
+        d="M104.132 17.019L80.3973 34.2059L56.6621 51.3927"
+        stroke="#262D29"
+        stroke-width="0.733333"
+      />
+      <path
+        class="focus-arrow"
+        d="M56.6641 51.3926
+C57.2154 52.0656 57.5464 52.9273 57.5464 53.8666
+C57.5464 56.019 55.8082 57.7639 53.6641 57.7639
+C51.52 57.7639 49.7812 56.019 49.7812 53.8666
+C49.7812 51.7142 51.52 49.9692 53.6641 49.9692
+C54.8725 49.9692 55.952 50.5235 56.6641 51.3926"
+        stroke="#262D29"
+        stroke-width="0.733333"
+      />
+    </svg>
+
+    <script>
+      //Focus-svg
+      document.addEventListener("DOMContentLoaded", function () {
+        const svg = document.querySelector(".focus-svg");
+        const arcs = document.querySelectorAll(".focus-svg .focus-arc");
+        const arrow = document.querySelectorAll(".focus-svg .focus-arrow");
+
+        let isHovering = false;
+        let hasPlayedOnce = false;
+
+        const tl = gsap.timeline({
+          paused: true,
+          defaults: { ease: "power1.inOut" },
+          onComplete() {
+            hasPlayedOnce = true;
+
+            // 🔁 Loop ONLY if hover is still active
+            if (isHovering) {
+              tl.restart();
+            }
+          },
+        });
+
+        [...arcs, ...arrow].forEach((arc, i) => {
+          const length = arc.getTotalLength();
+          //   const isLast = i === paths.length - 1;
+
+          gsap.set(arc, {
+            strokeDasharray: length,
+            strokeDashoffset: length,
+          });
+        });
+
+        tl.to(
+          arcs,
+          {
+            strokeDashoffset: 0,
+            duration: 1,
+            //   duration: isLast ? 1 : 1,
+          }
+          // i === 0 ? 0 : "-=0.15"
+        );
+
+        arrow.forEach((i, index) => {
+          const isLast = index === arrow.length - 1;
+          tl.to(i, {
+            strokeDashoffset: 0,
+            duration: isLast ? 0.5 : 1,
+          });
+        });
+        /* -----------------------------
+     PLAY ON VIEW (ONCE)
+  ----------------------------- */
+        const observer = new IntersectionObserver(
+          ([entry]) => {
+            if (entry.isIntersecting && !hasPlayedOnce) {
+              tl.play();
+              observer.disconnect();
+            }
+          },
+          { threshold: 0.6 }
+        );
+
+        observer.observe(svg);
+
+        /* -----------------------------
+     HOVER CONTROL
+  ----------------------------- */
+        svg.addEventListener("mouseenter", () => {
+          isHovering = true;
+
+          // If timeline already finished, start looping
+          if (!tl.isActive() && hasPlayedOnce) {
+            tl.restart();
+          }
+        });
+
+        svg.addEventListener("mouseleave", () => {
+          isHovering = false;
+          // Do nothing else — let current iteration finish
+        });
+      });
+    </script>
+  </body>
+</html>

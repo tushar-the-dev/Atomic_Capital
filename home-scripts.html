@@ -1,0 +1,174 @@
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const navs = document.querySelectorAll(".nav-link-wrapper");
+
+    navs.forEach((nav) => {
+      const navDot = nav.querySelector(".nav-link-dot");
+      const dropdown = nav.querySelector(".nav-link-dropdown");
+
+      // Measure actual content height
+      const height = dropdown.scrollHeight;
+      dropdown.style.setProperty("--menu-height", height + "px");
+
+      nav.addEventListener("mouseenter", () => {
+        dropdown.classList.add("is-open");
+        navDot.classList.add("active");
+      });
+
+      nav.addEventListener("mouseleave", () => {
+        dropdown.classList.remove("is-open");
+        navDot.classList.remove("active");
+      });
+
+      // Optional: recalc on resize
+      window.addEventListener("resize", () => {
+        const newHeight = dropdown.scrollHeight;
+        dropdown.style.setProperty("--menu-height", newHeight + "px");
+      });
+    });
+
+    // line height
+    var complete_height = gsap.utils.toArray("[vertical-line-fill]");
+    complete_height.forEach(function (element) {
+      let tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: element,
+          start: "top 95%",
+          end: "bottom -60%",
+          scrub: true,
+        },
+      });
+      tl.fromTo(
+        element,
+        { height: 0 },
+        { duration: 2, height: "100%", ease: "cubic" }
+      );
+    });
+  });
+
+  // Beyond Capital Cards
+  document.addEventListener("DOMContentLoaded", () => {
+    const cards = document.querySelectorAll(".beyond-capital-grid-item");
+
+    cards.forEach((card) => {
+      const video = card.querySelector(".beyond-cap-grid-item-icon video");
+      // Play on hover
+      card.addEventListener("mouseenter", () => {
+        video.play();
+      });
+
+      // Pause & reset on hover out
+      card.addEventListener("mouseleave", () => {
+        video.pause();
+        video.currentTime = 0;
+      });
+    });
+  });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const video = document.querySelector(".atomic-animation video");
+    if (!video) return;
+
+    let hasPlayed = false;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !hasPlayed) {
+            video.play().catch(() => {});
+            hasPlayed = true;
+            observer.disconnect(); // stop observing forever
+          }
+        });
+      },
+      {
+        threshold: 0.5, // 50% visible
+      }
+    );
+
+    observer.observe(video);
+  });
+  
+
+  //Graph
+  document.addEventListener("DOMContentLoaded", function(){
+
+    gsap.registerPlugin(ScrollTrigger);
+
+
+const paths = [...document.querySelectorAll("#barsSvg path")];
+const TOTAL_STEPS = 6;
+const STEP = 1 / TOTAL_STEPS;
+
+const tl = gsap.timeline({
+  scrollTrigger: {
+    trigger: ".section_how_we_build",
+    start: "top top",
+    end: "bottom bottom",
+    scrub: true,
+    pin: ".how-we-build-section-wrapper",
+    anticipatePin: 1,
+    markers: true,
+  //   snap: {
+  //   snapTo: 1/6,
+  //   duration: 0.4,
+  //   ease: "power2.out",
+  //   delay: 0
+  // },
+  }
+});
+
+// tl.to(".svg-progress-bar",
+//     {
+//          width: "100%",
+//          ease: "none",
+
+//     }, 0
+// )
+
+;
+
+paths.forEach((path, i) => {
+  const stroke = path.getAttribute("stroke");
+  if (!stroke || !stroke.startsWith("url")) return;
+
+  const gradientId = stroke.match(/#([^)]+)/)?.[1];
+  if (!gradientId) return;
+
+  const gradient = document.getElementById(gradientId);
+  if (!gradient) return;
+
+  const stops = gradient.querySelectorAll("stop");
+  if (stops.length < 2) return;
+
+  const [topStop, bottomStop] = stops;
+
+  // Initial state
+  gsap.set(topStop, { stopOpacity: 0.2 });
+  gsap.set(bottomStop, { stopOpacity: 0.05 });
+
+  // 👇 one path per scroll segment
+  tl.to(topStop, {
+    stopOpacity: 1,
+    ease: "none",
+    duration: 1
+  });
+
+  tl.to(bottomStop, {
+    stopOpacity: 0,
+    ease: "none",
+    duration: 1
+  }, "<"); // run together with topStop
+});
+
+// ✅ Add progress bar synced to full timeline
+tl.to(".svg-progress-bar", {
+  width: "100%",
+  ease: "none",
+  duration: tl.duration() // match entire timeline
+}, 0)
+
+
+  })
+  
+</script>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>SVG Draw One by One</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+
+    <style>
+      body {
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+      }
+
+      .flower-pot-svg {
+        width: 220px;
+        height: auto;
+        display: block; /* IMPORTANT: removes extra space */
+      }
+
+      .flower-pot-svg path {
+        fill: none;
+        stroke: #262d29;
+        stroke-width: 0.733333;
+      }
+    </style>
+  </head>
+  <body>
+    <svg
+      class="flower-pot-svg"
+      width="100%"
+      height="100%"
+      viewBox="0 0 73 119"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M38.3672 68.7405C57.1449 68.7405 72.3672 53.4345 72.3672 34.5536C72.3672 15.6727 57.1449 0.366699 38.3672 0.366699C19.5895 0.366699 4.36719 15.6727 4.36719 34.5536C4.36719 53.4345 19.5895 68.7405 38.3672 68.7405ZM38.3672 68.7405V118.367M38.3672 118.367H26.3027M38.3672 118.367H50.9801"
+        stroke="#262D29"
+        stroke-width="0.733333"
+      />
+      <path
+        d="M19.011 83.4543C27.1524 89.9432 28.3737 102.516 28.3737 102.516C28.3737 102.516 12.7014 106.572 4.76355 96.0268C-1.34252 87.9154 0.692847 77.3708 0.692847 77.3708C0.692847 77.3708 10.9068 76.995 19.011 83.4543Z"
+        stroke="#262D29"
+        stroke-width="0.733333"
+      />
+      <path
+        d="M53.6824 89.505C48.1909 93.9161 47.3672 102.463 47.3672 102.463C47.3672 102.463 57.9382 105.22 63.2924 98.0516C67.411 92.5376 66.0381 85.3695 66.0381 85.3695C66.0381 85.3695 59.1487 85.114 53.6824 89.505Z"
+        stroke="#262D29"
+        stroke-width="0.733333"
+      />
+      <path
+        d="M48.411 29.049C48.411 24.7855 44.969 21.3293 40.723 21.3293H39.3501H35.7807C31.9896 21.3293 28.9163 24.4152 28.9163 28.2219C28.9163 32.0285 31.9896 35.1144 35.7807 35.1144H39.3501H42.9196C46.7106 35.1144 49.7839 38.2003 49.7839 42.0069C49.7839 45.8136 46.7106 48.8994 42.9196 48.8994H39.3501H36.6044C32.0551 48.8994 28.3672 45.1964 28.3672 40.6284"
+        stroke="#262D29"
+        stroke-width="0.733333"
+      />
+      <path
+        d="M39.3672 53.3106V48.8994V35.1144V21.3293V16.3667"
+        stroke="#262D29"
+        stroke-width="0.733333"
+      />
+    </svg>
+
+    <!-- <svg width="73" height="119" viewBox="0 0 73 119" xmlns="http://www.w3.org/2000/svg">
+  <path d="M38.3672 68.7405C57.1449 68.7405 72.3672 53.4345 72.3672 34.5536C72.3672 15.6727 57.1449 0.366699 38.3672 0.366699C19.5895 0.366699 4.36719 15.6727 4.36719 34.5536C4.36719 53.4345 19.5895 68.7405 38.3672 68.7405ZM38.3672 68.7405V118.367M38.3672 118.367H26.3027M38.3672 118.367H50.9801"/>
+  
+  <path d="M19.011 83.4543C27.1524 89.9432 28.3737 102.516 28.3737 102.516C28.3737 102.516 12.7014 106.572 4.76355 96.0268C-1.34252 87.9154 0.692847 77.3708 0.692847 77.3708C0.692847 77.3708 10.9068 76.995 19.011 83.4543Z"/>
+
+  <path d="M53.6824 89.505C48.1909 93.9161 47.3672 102.463 47.3672 102.463C47.3672 102.463 57.9382 105.22 63.2924 98.0516C67.411 92.5376 66.0381 85.3695 66.0381 85.3695C66.0381 85.3695 59.1487 85.114 53.6824 89.505Z"/>
+  <path d="M39.3501 21.3293H40.723C44.969 21.3293 48.411 24.7855 48.411 29.049M39.3501 21.3293H35.7807C31.9896 21.3293 28.9163 24.4152 28.9163 28.2218C28.9163 32.0285 31.9896 35.1144 35.7807 35.1144H39.3501M39.3501 21.3293V35.1144M39.3501 21.3293V16.3667M39.3501 48.8994H42.9196C46.7106 48.8994 49.7839 45.8135 49.7839 42.0069C49.7839 38.2003 46.7106 35.1144 42.9196 35.1144H39.3501M39.3501 48.8994H36.6044C32.0551 48.8994 28.3672 45.1963 28.3672 40.6284M39.3501 48.8994V35.1144M39.3501 48.8994V53.3106"/>
+
+</svg> -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const svg = document.querySelector(".flower-pot-svg");
+        const paths = document.querySelectorAll(".flower-pot-svg path");
+
+        let isHovering = false;
+        let hasPlayedOnce = false;
+
+        const tl = gsap.timeline({
+          paused: true,
+          defaults: { ease: "power1.inOut" },
+          onComplete() {
+            hasPlayedOnce = true;
+
+            // 🔁 Loop ONLY if hover is still active
+            if (isHovering) {
+              tl.restart();
+            }
+          },
+        });
+
+        paths.forEach((path, i) => {
+          const length = path.getTotalLength();
+          const isLast = i === paths.length - 1;
+
+          gsap.set(path, {
+            strokeDasharray: length,
+            strokeDashoffset: length,
+          });
+
+          tl.to(
+            path,
+            {
+              strokeDashoffset: 0,
+              duration: isLast ? 1 : 0.7,
+            },
+            i === 0 ? 0 : "-=0.15"
+          );
+        });
+
+        /* -----------------------------
+     PLAY ON VIEW (ONCE)
+  ----------------------------- */
+        const observer = new IntersectionObserver(
+          ([entry]) => {
+            if (entry.isIntersecting && !hasPlayedOnce) {
+              tl.play();
+              observer.disconnect();
+            }
+          },
+          { threshold: 0.6 }
+        );
+
+        observer.observe(svg);
+
+        /* -----------------------------
+     HOVER CONTROL
+  ----------------------------- */
+        svg.addEventListener("mouseenter", () => {
+          isHovering = true;
+
+          // If timeline already finished, start looping
+          if (!tl.isActive() && hasPlayedOnce) {
+            tl.restart();
+          }
+        });
+
+        svg.addEventListener("mouseleave", () => {
+          isHovering = false;
+          // Do nothing else — let current iteration finish
+        });
+      });
+    </script>
+
+    <!-- <script>
+
+  const svg = document.getElementById("draw-svg");
+
+svg.addEventListener("mouseenter", () => {
+  isHovering = true;
+
+  // If animation already finished, start looping immediately
+  if (!drawTl.isActive() && hasPlayedOnce) {
+    drawTl.restart();
+  }
+
+  // If animation is active → DO NOTHING
+  // it will finish naturally, then loop via onComplete
+});
+
+svg.addEventListener("mouseleave", () => {
+  isHovering = false;
+  // Do nothing else!
+  // onComplete will NOT restart because isHovering === false
+});
+
+
+ const paths = document.querySelectorAll("svg path");
+const tl = gsap.timeline({ defaults: { ease: "power1.inOut" } });
+
+paths.forEach((path, i) => {
+  const length = path.getTotalLength();
+  const isLast = i === paths.length - 1;
+
+  gsap.set(path, {
+    strokeDasharray: length,
+    strokeDashoffset: length
+  });
+
+  tl.to(
+    path,
+    {
+      strokeDashoffset: 0,
+      duration: isLast ? 1.5 : 0.7, // 👈 longer for last path
+    },
+    i === 0 ? 0 : "-=0.15"
+  );
+});
+
+</script> -->
+  </body>
+</html>

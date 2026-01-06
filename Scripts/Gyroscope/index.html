@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>SVG Draw One by One</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+
+    <style>
+      body {
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+      }
+
+      svg {
+        width: 220px;
+        height: auto;
+        display: block; /* IMPORTANT: removes extra space */
+      }
+
+       path {
+        fill: none;
+        stroke: #262d29;
+        stroke-width: 0.733333;
+      }
+    </style>
+  </head>
+  <body>
+    <svg
+      width="100%"
+      height="100%"
+      viewBox="0 0 120 120"
+      fill="none"
+      id="gyroscope"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M59.9922 113C89.2633 113 112.992 89.2711 112.992 60C112.992 30.7289 89.2633 7 59.9922 7C30.7211 7 6.99219 30.7289 6.99219 60C6.99219 89.2711 30.7211 113 59.9922 113Z"
+        stroke="#262D29"
+        stroke-width="0.733333"
+      />
+      <path
+        d="M59.9923 7C68.3134 7 76.0385 12.6903 81.7427 22.3021C87.4339 31.8927 90.9922 45.2183 90.9922 60C90.9922 74.7817 87.4339 88.1073 81.7427 97.6981C76.0385 107.31 68.3134 113 59.9923 113C51.671 113 43.949 107.31 38.2448 97.6981C32.5534 88.1073 28.9922 74.7823 28.9922 60C28.9922 45.2177 32.5534 31.8927 38.2448 22.3021C43.949 12.6905 51.6713 7.00007 59.9923 7Z"
+        stroke="#262D29"
+        stroke-width="0.733333"
+      />
+      <path
+        d="M112.992 59.9998C112.992 68.3212 107.302 76.046 97.69 81.7502C88.0995 87.4417 74.7739 90.9997 59.992 91C45.2107 91 31.8848 87.4417 22.2943 81.7502C12.6825 76.046 6.99219 68.3212 6.99219 59.9998C6.99225 51.6788 12.6826 43.9568 22.2943 38.2527C31.8851 32.5609 45.21 29 59.992 29C74.7742 29 88.0992 32.5609 97.69 38.2527C107.302 43.9568 112.992 51.6788 112.992 59.9998Z"
+        stroke="#262D29"
+        stroke-width="0.733333"
+      />
+    </svg>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const svg = document.getElementById("gyroscope");
+
+    let isHovering = false;
+    let hasPlayedOnce = false;
+
+    // Initial state
+    gsap.set(svg, {
+      rotation: 0,
+      transformOrigin: "50% 50%"
+    });
+
+    const tl = gsap.timeline({
+      paused: true,
+      onComplete() {
+        hasPlayedOnce = true;
+
+        // 🔁 Loop ONLY if hover is active
+        if (isHovering) {
+          tl.restart();
+        }
+      }
+    });
+
+    /* -----------------------------
+       ONE FULL ROTATION
+    ----------------------------- */
+    tl.to(svg, {
+      rotation: 360,
+      duration: 3.5,
+      ease: "linear"
+    });
+
+    /* -----------------------------
+       PLAY ON VIEW (ONCE)
+    ----------------------------- */
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasPlayedOnce) {
+          tl.play();
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.6 }
+    );
+
+    observer.observe(svg);
+
+    /* -----------------------------
+       HOVER CONTROL
+    ----------------------------- */
+    svg.addEventListener("mouseenter", () => {
+      isHovering = true;
+
+      // If finished already, start looping
+      if (!tl.isActive() && hasPlayedOnce) {
+        tl.restart();
+      }
+    });
+
+    svg.addEventListener("mouseleave", () => {
+      isHovering = false;
+      // Let current rotation finish naturally
+    });
+  });
+</script>
+
+  
+  </body>
+</html>

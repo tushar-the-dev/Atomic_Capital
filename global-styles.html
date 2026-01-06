@@ -1,0 +1,138 @@
+<style>
+  html {
+    font-size: 0.833vw;
+    scrollbar-width: none;
+    height: fit-content;
+    -webkit-clip-path: inset(0 0 0 0);
+    clip-path: inset(0 0 0 0);
+  }
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Scroll lock */
+  /* body.no-scroll {
+    overflow: hidden;
+  } */
+
+  /* Remove default anchor link styles */
+  a {
+    color: inherit;
+    text-decoration: none;
+    background: none;
+  }
+
+  /* Optional: remove focus outline (accessibility note below) */
+  a:focus {
+    outline: none;
+  }
+
+  /* Keep hover/active states consistent */
+  a:hover,
+  a:active,
+  a:visited {
+    color: none;
+    text-decoration: none;
+  }
+
+
+.marquee-wrapper {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  box-sizing: border-box;
+  position: relative;
+}
+.marquee-wrapper:before {
+  content: "";
+  background: linear-gradient(to right, #fff 0%, rgba(255, 255, 255, 0) 100%);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 120px;
+  height: 100%;
+  z-index: 9;
+}
+.marquee-wrapper:after {
+  content: "";
+  background: linear-gradient(to left, #fff 0%, rgba(255, 255, 255, 0) 100%);
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 120px;
+  height: 100%;
+  z-index: 9;
+}
+.marquee-content {
+  display: flex;
+  align-items: center;
+  animation: marquee-scroll 15s linear infinite;
+}
+.marquee-content:hover {
+  animation-play-state: paused;
+}
+
+.marquee-content.reverse {
+  animation-direction: reverse;
+}
+
+
+@keyframes marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.cta-section-wrapper .cta-sec-bg{
+  mix-blend-mode: multiply;
+}
+
+  @media screen and (min-width: 992px) and (max-width: 1440px) {
+    html {
+      font-size: 0.8vw;
+    }
+
+    /* .container {
+      padding: 0 4rem;
+    } */
+  }
+
+  @media screen and (max-width: 1199px) {
+    html {
+      font-size: 0.9765625vw;
+    }
+  }
+
+  @media screen and (max-width: 991px) {
+    html {
+      font-size: 2vw;
+    }
+
+    /* .container {
+      padding: 0 3rem;
+    } */
+  }
+
+  @media screen and (max-width: 767px) {
+    html {
+      font-size: 13px;
+    }
+
+    /* .container {
+      padding: 0 1rem;
+    } */
+  }
+
+  @media screen and (max-width: 479px) {
+  }
+</style>

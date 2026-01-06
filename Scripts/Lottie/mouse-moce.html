@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mouse Mask Reveal</title>
+
+  <!-- jQuery -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+  <style>
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      background: #0b0b0b;
+      overflow: hidden;
+    }
+
+    /* MASK PARENT */
+    .mask-wrapper {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+
+      /* MASK IMAGE */
+      -webkit-mask-image: url("https://cdn.prod.website-files.com/69536206688e50587d80f9e2/695bee1ea305047f709cec70_Group%20386.png");
+      -webkit-mask-repeat: no-repeat;
+      -webkit-mask-size: 420px auto;
+      -webkit-mask-position: center;
+
+      mask-image: url("https://cdn.prod.website-files.com/69536206688e50587d80f9e2/695bee1ea305047f709cec70_Group%20386.png");
+      mask-repeat: no-repeat;
+      mask-size: 420px auto;
+      mask-position: center;
+    }
+
+    /* MOVING CONTENT UNDER MASK */
+    .mask-content {
+      position: absolute;
+      width: 120%;
+      height: 120%;
+      top: -10%;
+      left: -10%;
+
+      background: linear-gradient(
+        135deg,
+        #ff6a00,
+        #ffcc00,
+        #00ffd5,
+        #6a00ff
+      );
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HTML (middle) -->
+  <div class="mask-wrapper">
+    <div class="mask-content"></div>
+  </div>
+
+  <!-- JS (bottom) -->
+  <script>
+    const wrapper = $(".mask-wrapper");
+    const content = $(".mask-content");
+
+    wrapper.on("mousemove", function (e) {
+      const rect = this.getBoundingClientRect();
+
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      gsap.to(content, {
+        x: (x - rect.width / 2) * 0.2,
+        y: (y - rect.height / 2) * 0.2,
+        duration: 0.6,
+        ease: "power3.out"
+      });
+    });
+
+    wrapper.on("mouseleave", function () {
+      gsap.to(content, {
+        x: 0,
+        y: 0,
+        duration: 0.8,
+        ease: "power4.out"
+      });
+    });
+  </script>
+
+</body>
+</html>
