@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Inter Tight", sans-serif;
+            color: #171717;
+        }
+
+        .graph-animation {
+            padding-bottom: 80px;
+        }
+
+        .graph-animation .container {
+            max-width: 1314px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 0 20px;
+            height: 300vh;
+        }
+
+        .graph-animation .sticky-wrapper {
+            height: 100vh;
+            position: sticky;
+            top: 80px;
+        }
+
+        .graph-animation .inner-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .graph-animation .content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+        }
+
+        .graph-animation .title {
+            font-size: 40px;
+            line-height: 120%;
+            font-weight: 500;
+        }
+
+        .graph-animation .subtitle {
+            font-size: 12px;
+            line-height: 120%;
+            font-weight: 500;
+            color: #17171766;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .graph-animation .heading-wrapper {
+            margin-bottom: 90px;
+        }
+
+        .graph-animation .graph-card-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 130px;
+            max-width: 765px;
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .graph-animation .graph-card-wrapper::after {
+            position: absolute;
+            /* for shadow white*/
+            content: "";
+            background: linear-gradient(-90deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0) 200%);
+            top: 0;
+            bottom: 0;
+            right: -10px;
+            width: 45%;
+        }
+
+        .graph-animation .graph-card {
+            width: 290px;
+            flex: none;
+            will-change: transform;
+        }
+
+        .graph-animation .graph-card svg {
+            width: 60px;
+        }
+
+        .graph-animation .graph-card h6 {
+            font-size: 24px;
+            line-height: 120%;
+            font-weight: 500;
+            margin: 32px 0 12px;
+        }
+
+        .graph-animation .graph-card p {
+            font-size: 18px;
+            line-height: 144%;
+            font-weight: 400;
+            color: #171717CC;
+        }
+
+        .graph-animation .main-graph-wrappper {
+            display: flex;
+            justify-content: center;
+            align-items: end;
+        }
+
+        .graph-animation .main-graph-wrappper,
+        .graph-animation .graph-svg-block {
+            gap: 30px;
+        }
+
+        .graph-animation .graph-block-wrapper p {
+            font-size: 14px;
+            line-height: 120%;
+            font-weight: 400;
+            color: #171717;
+            background-color: #FFFFFF;
+            padding: 2px 4px;
+            display: inline;
+        }
+
+        .graph-animation .graph-block-wrapper {
+            text-align: center;
+            z-index: 1;
+            position: relative;
+        }
+
+        .graph-animation .graph-svg-block {
+            display: flex;
+            justify-content: center;
+            align-items: end;
+        }
+
+        .graph-animation .timeline-wrapper {
+            position: absolute;
+            width: 100%;
+            left: 0;
+            bottom: 7px;
+            z-index: 0;
+        }
+
+        .graph-animation .timeline-bg {
+            width: 100%;
+            height: 1px;
+            background-color: #D1D1D1;
+            display: block;
+        }
+
+        .graph-animation .timeline-bg.active {
+            background-color: #171717;
+            margin-top: -1px;
+            position: relative;
+        }
+
+        .graph-animation .timeline-bg.active .graph-dot {
+            position: absolute;
+            bottom: -200%;
+            right: -6px;
+        }
+
+        .graph-animation .timeline-bg.active::after {
+            position: absolute;
+            content: "";
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1px;
+            height: 21px;
+            background-color: #171717;
+        }
+
+        .graph-animation .timeline-bg.active::before {
+            position: absolute;
+            content: "";
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1px;
+            height: 21px;
+            background-color: #171717;
+        }
+
+        .graph-animation .main-graph-wrappper .graph-block-wrapper:nth-child(1) svg path {
+            opacity: 1 !important;
+        }
+
+        /* .graph-animation .graph-block-wrapper svg path {
+            opacity: 0.3;
+            transition: opacity 0.3s linear;
+        } */
+
+        .graph-animation .graph-block-wrapper.is-active svg path {
+            opacity: 1;
+        }
+
+        .graph-animation .graph-block-wrapper.is-active .graph-label {
+            opacity: 1;
+        }
+
+        .graph-animation .graph-label {
+            position: absolute;
+            bottom: 100%;
+            right: -50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            opacity: 0;
+            transition: opacity 0.3s linear;
+            max-width: 100px;
+            width: 100%;
+            gap: 10px;
+        }
+
+        .graph-animation .graph-label span {
+            font-size: 48px;
+            line-height: 120%;
+            font-weight: 500;
+        }
+
+        /* .graph-label.is-visible {
+            opacity: 1;
+        } */
+
+        .graph-animation .dot {
+            display: block;
+            width: 12px;
+            height: 12px;
+            background-color: #171717;
+            box-shadow: 0px 0px 0px 8px #00000014;
+            border-radius: 999px;
+            top: var(--graph-top, 0px);
+
+        }
+    </style>
+</head>
+
+<body>
+    <div class="graph-animation">
+        <div class="container">
+            <div class="sticky-wrapper">
+                <div class="inner-wrapper">
+                    <div class="content">
+                        <div class="heading-wrapper">
+                            <p class="subtitle">How We Build</p>
+                            <h2 class="title">Our Unique Execution Playbook</h2>
+                        </div>
+                        <div class="graph-card-wrapper">
+                            <div class="graph-card">
+                                <svg width="60" height="60" viewBox="0 0 60 60" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <g clip-path="url(#clip0_316_701)">
+                                        <path
+                                            d="M29.9961 59.25C46.1504 59.25 59.2461 46.1543 59.2461 30C59.2461 13.8457 46.1504 0.75 29.9961 0.75C13.8418 0.75 0.746094 13.8457 0.746094 30C0.746094 46.1543 13.8418 59.25 29.9961 59.25Z"
+                                            stroke="#171717" stroke-width="0.733333" />
+                                        <path
+                                            d="M23.2461 43L15.2461 45L17.2461 37M23.2461 43L20.2461 40M23.2461 43L29.7461 36.5M17.2461 37L20.2461 40M17.2461 37L23.7461 30.5M20.2461 40L35.7461 24.5M32.7461 21.5L35.7461 18.5M32.7461 21.5L35.7461 24.5M32.7461 21.5L30.2461 24M38.7461 27.5L41.7461 24.5M38.7461 27.5L35.7461 24.5M38.7461 27.5L36.2461 30M35.7461 18.5L39.7461 14.5L45.7461 20.5L41.7461 24.5M35.7461 18.5L41.7461 24.5M36.2461 30L29.7461 36.5M36.2461 30L39.7461 33.5M30.2461 24L23.7461 30.5M30.2461 24L26.7461 20.5M23.7461 30.5L12.7461 19.5L19.2461 13L23.2461 17M29.7461 36.5L40.7461 47L47.2461 41L42.7461 36.5M19.7461 20.5L23.2461 17M23.2461 17L26.7461 20.5M23.7461 23.5L26.7461 20.5M36.7461 36.5L39.7461 33.5M39.7461 33.5L42.7461 36.5M42.7461 36.5L38.7461 40.5"
+                                            stroke="#171717" stroke-width="0.733333" />
+                                    </g>
+                                    <defs>
+                                        <clipPath id="clip0_316_701">
+                                            <rect width="60" height="60" fill="white" />
+                                        </clipPath>
+                                    </defs>
+                                </svg>
+                                <h6>Data Infrastructure</h6>
+                                <p>Direct access to portfolio data and weekly KPI dashboards that enable proactive,
+                                    objective
+                                    decision-making.</p>
+                            </div>
+                            <div class="graph-card">
+                                <svg width="60" height="60" viewBox="0 0 60 60" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <g clip-path="url(#clip0_316_701)">
+                                        <path
+                                            d="M29.9961 59.25C46.1504 59.25 59.2461 46.1543 59.2461 30C59.2461 13.8457 46.1504 0.75 29.9961 0.75C13.8418 0.75 0.746094 13.8457 0.746094 30C0.746094 46.1543 13.8418 59.25 29.9961 59.25Z"
+                                            stroke="#171717" stroke-width="0.733333" />
+                                        <path
+                                            d="M23.2461 43L15.2461 45L17.2461 37M23.2461 43L20.2461 40M23.2461 43L29.7461 36.5M17.2461 37L20.2461 40M17.2461 37L23.7461 30.5M20.2461 40L35.7461 24.5M32.7461 21.5L35.7461 18.5M32.7461 21.5L35.7461 24.5M32.7461 21.5L30.2461 24M38.7461 27.5L41.7461 24.5M38.7461 27.5L35.7461 24.5M38.7461 27.5L36.2461 30M35.7461 18.5L39.7461 14.5L45.7461 20.5L41.7461 24.5M35.7461 18.5L41.7461 24.5M36.2461 30L29.7461 36.5M36.2461 30L39.7461 33.5M30.2461 24L23.7461 30.5M30.2461 24L26.7461 20.5M23.7461 30.5L12.7461 19.5L19.2461 13L23.2461 17M29.7461 36.5L40.7461 47L47.2461 41L42.7461 36.5M19.7461 20.5L23.2461 17M23.2461 17L26.7461 20.5M23.7461 23.5L26.7461 20.5M36.7461 36.5L39.7461 33.5M39.7461 33.5L42.7461 36.5M42.7461 36.5L38.7461 40.5"
+                                            stroke="#171717" stroke-width="0.733333" />
+                                    </g>
+                                    <defs>
+                                        <clipPath id="clip0_316_701">
+                                            <rect width="60" height="60" fill="white" />
+                                        </clipPath>
+                                    </defs>
+                                </svg>
+                                <h6>Structured Finance</h6>
+                                <p>Clear visibility into unit economics, cash flows, and profitability to support
+                                    disciplined
+                                    growth.</p>
+                            </div>
+
+                            <div class="graph-card">
+                                <svg width="60" height="60" viewBox="0 0 60 60" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <g clip-path="url(#clip0_316_701)">
+                                        <path
+                                            d="M29.9961 59.25C46.1504 59.25 59.2461 46.1543 59.2461 30C59.2461 13.8457 46.1504 0.75 29.9961 0.75C13.8418 0.75 0.746094 13.8457 0.746094 30C0.746094 46.1543 13.8418 59.25 29.9961 59.25Z"
+                                            stroke="#171717" stroke-width="0.733333" />
+                                        <path
+                                            d="M23.2461 43L15.2461 45L17.2461 37M23.2461 43L20.2461 40M23.2461 43L29.7461 36.5M17.2461 37L20.2461 40M17.2461 37L23.7461 30.5M20.2461 40L35.7461 24.5M32.7461 21.5L35.7461 18.5M32.7461 21.5L35.7461 24.5M32.7461 21.5L30.2461 24M38.7461 27.5L41.7461 24.5M38.7461 27.5L35.7461 24.5M38.7461 27.5L36.2461 30M35.7461 18.5L39.7461 14.5L45.7461 20.5L41.7461 24.5M35.7461 18.5L41.7461 24.5M36.2461 30L29.7461 36.5M36.2461 30L39.7461 33.5M30.2461 24L23.7461 30.5M30.2461 24L26.7461 20.5M23.7461 30.5L12.7461 19.5L19.2461 13L23.2461 17M29.7461 36.5L40.7461 47L47.2461 41L42.7461 36.5M19.7461 20.5L23.2461 17M23.2461 17L26.7461 20.5M23.7461 23.5L26.7461 20.5M36.7461 36.5L39.7461 33.5M39.7461 33.5L42.7461 36.5M42.7461 36.5L38.7461 40.5"
+                                            stroke="#171717" stroke-width="0.733333" />
+                                    </g>
+                                    <defs>
+                                        <clipPath id="clip0_316_701">
+                                            <rect width="60" height="60" fill="white" />
+                                        </clipPath>
+                                    </defs>
+                                </svg>
+                                <h6>Marketing Execution</h6>
+                                <p>Creative-led performance marketing with rapid experimentation and continuous
+                                    optimization.
+                                </p>
+                            </div>
+                            <div class="graph-card">
+                                <svg width="60" height="60" viewBox="0 0 60 60" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <g clip-path="url(#clip0_316_701)">
+                                        <path
+                                            d="M29.9961 59.25C46.1504 59.25 59.2461 46.1543 59.2461 30C59.2461 13.8457 46.1504 0.75 29.9961 0.75C13.8418 0.75 0.746094 13.8457 0.746094 30C0.746094 46.1543 13.8418 59.25 29.9961 59.25Z"
+                                            stroke="#171717" stroke-width="0.733333" />
+                                        <path
+                                            d="M23.2461 43L15.2461 45L17.2461 37M23.2461 43L20.2461 40M23.2461 43L29.7461 36.5M17.2461 37L20.2461 40M17.2461 37L23.7461 30.5M20.2461 40L35.7461 24.5M32.7461 21.5L35.7461 18.5M32.7461 21.5L35.7461 24.5M32.7461 21.5L30.2461 24M38.7461 27.5L41.7461 24.5M38.7461 27.5L35.7461 24.5M38.7461 27.5L36.2461 30M35.7461 18.5L39.7461 14.5L45.7461 20.5L41.7461 24.5M35.7461 18.5L41.7461 24.5M36.2461 30L29.7461 36.5M36.2461 30L39.7461 33.5M30.2461 24L23.7461 30.5M30.2461 24L26.7461 20.5M23.7461 30.5L12.7461 19.5L19.2461 13L23.2461 17M29.7461 36.5L40.7461 47L47.2461 41L42.7461 36.5M19.7461 20.5L23.2461 17M23.2461 17L26.7461 20.5M23.7461 23.5L26.7461 20.5M36.7461 36.5L39.7461 33.5M39.7461 33.5L42.7461 36.5M42.7461 36.5L38.7461 40.5"
+                                            stroke="#171717" stroke-width="0.733333" />
+                                    </g>
+                                    <defs>
+                                        <clipPath id="clip0_316_701">
+                                            <rect width="60" height="60" fill="white" />
+                                        </clipPath>
+                                    </defs>
+                                </svg>
+                                <h6>Branding & design</h6>
+                                <p>Mobile-first brand building focused on recall, trust, and repeat behavior.</p>
+                            </div>
+                            <div class="graph-card">
+                                <svg width="60" height="60" viewBox="0 0 60 60" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <g clip-path="url(#clip0_316_701)">
+                                        <path
+                                            d="M29.9961 59.25C46.1504 59.25 59.2461 46.1543 59.2461 30C59.2461 13.8457 46.1504 0.75 29.9961 0.75C13.8418 0.75 0.746094 13.8457 0.746094 30C0.746094 46.1543 13.8418 59.25 29.9961 59.25Z"
+                                            stroke="#171717" stroke-width="0.733333" />
+                                        <path
+                                            d="M23.2461 43L15.2461 45L17.2461 37M23.2461 43L20.2461 40M23.2461 43L29.7461 36.5M17.2461 37L20.2461 40M17.2461 37L23.7461 30.5M20.2461 40L35.7461 24.5M32.7461 21.5L35.7461 18.5M32.7461 21.5L35.7461 24.5M32.7461 21.5L30.2461 24M38.7461 27.5L41.7461 24.5M38.7461 27.5L35.7461 24.5M38.7461 27.5L36.2461 30M35.7461 18.5L39.7461 14.5L45.7461 20.5L41.7461 24.5M35.7461 18.5L41.7461 24.5M36.2461 30L29.7461 36.5M36.2461 30L39.7461 33.5M30.2461 24L23.7461 30.5M30.2461 24L26.7461 20.5M23.7461 30.5L12.7461 19.5L19.2461 13L23.2461 17M29.7461 36.5L40.7461 47L47.2461 41L42.7461 36.5M19.7461 20.5L23.2461 17M23.2461 17L26.7461 20.5M23.7461 23.5L26.7461 20.5M36.7461 36.5L39.7461 33.5M39.7461 33.5L42.7461 36.5M42.7461 36.5L38.7461 40.5"
+                                            stroke="#171717" stroke-width="0.733333" />
+                                    </g>
+                                    <defs>
+                                        <clipPath id="clip0_316_701">
+                                            <rect width="60" height="60" fill="white" />
+                                        </clipPath>
+                                    </defs>
+                                </svg>
+                                <h6>Go-to-Market</h6>
+                                <p>Thoughtful omnichannel strategies, geo-expansion, & focus on high-ROAS growth levers.
+                                </p>
+                            </div>
+                            <div class="graph-card">
+                                <svg width="60" height="60" viewBox="0 0 60 60" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <g clip-path="url(#clip0_316_701)">
+                                        <path
+                                            d="M29.9961 59.25C46.1504 59.25 59.2461 46.1543 59.2461 30C59.2461 13.8457 46.1504 0.75 29.9961 0.75C13.8418 0.75 0.746094 13.8457 0.746094 30C0.746094 46.1543 13.8418 59.25 29.9961 59.25Z"
+                                            stroke="#171717" stroke-width="0.733333" />
+                                        <path
+                                            d="M23.2461 43L15.2461 45L17.2461 37M23.2461 43L20.2461 40M23.2461 43L29.7461 36.5M17.2461 37L20.2461 40M17.2461 37L23.7461 30.5M20.2461 40L35.7461 24.5M32.7461 21.5L35.7461 18.5M32.7461 21.5L35.7461 24.5M32.7461 21.5L30.2461 24M38.7461 27.5L41.7461 24.5M38.7461 27.5L35.7461 24.5M38.7461 27.5L36.2461 30M35.7461 18.5L39.7461 14.5L45.7461 20.5L41.7461 24.5M35.7461 18.5L41.7461 24.5M36.2461 30L29.7461 36.5M36.2461 30L39.7461 33.5M30.2461 24L23.7461 30.5M30.2461 24L26.7461 20.5M23.7461 30.5L12.7461 19.5L19.2461 13L23.2461 17M29.7461 36.5L40.7461 47L47.2461 41L42.7461 36.5M19.7461 20.5L23.2461 17M23.2461 17L26.7461 20.5M23.7461 23.5L26.7461 20.5M36.7461 36.5L39.7461 33.5M39.7461 33.5L42.7461 36.5M42.7461 36.5L38.7461 40.5"
+                                            stroke="#171717" stroke-width="0.733333" />
+                                    </g>
+                                    <defs>
+                                        <clipPath id="clip0_316_701">
+                                            <rect width="60" height="60" fill="white" />
+                                        </clipPath>
+                                    </defs>
+                                </svg>
+                                <h6>Talent</h6>
+                                <p>Proactive CXO and senior leadership hiring to unlock step-change growth and execution
+                                    capability.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="main-graph-wrappper">
+                        <div class="graph-block-wrapper">
+                            <div class="graph-svg-block">
+                                <svg width="1" height="51" viewBox="0 0 1 51" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M0.375 51V0" stroke="url(#paint0_linear_253_257)" stroke-width="0.75" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_253_257" x1="0.875" y1="0" x2="0.875" y2="51"
+                                            gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#171717" />
+                                            <stop offset="1" stop-color="#171717" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <svg width="1" height="52" viewBox="0 0 1 52" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M0.375 52V0" stroke="url(#paint0_linear_253_258)" stroke-width="0.75" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_253_258" x1="0.875" y1="0" x2="0.875" y2="52"
+                                            gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#171717" />
+                                            <stop offset="1" stop-color="#171717" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <svg width="1" height="54" viewBox="0 0 1 54" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M0.375 54V0" stroke="url(#paint0_linear_253_259)" stroke-width="0.75" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_253_259" x1="0.875" y1="0" x2="0.875" y2="54"
+                                            gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#171717" />
+                                            <stop offset="1" stop-color="#171717" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <svg width="1" height="56" viewBox="0 0 1 56" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M0.375 56V0" stroke="url(#paint0_linear_253_260)" stroke-width="0.75" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_253_260" x1="0.875" y1="0" x2="0.875" y2="56"
+                                            gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#171717" />
+                                            <stop offset="1" stop-color="#171717" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <svg width="1" height="59" viewBox="0 0 1 59" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M0.375 59V0" stroke="url(#paint0_linear_253_261)" stroke-width="0.75" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_253_261" x1="0.875" y1="0" x2="0.875" y2="59"
+                                            gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#171717" />
+                                            <stop offset="1" stop-color="#171717" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <svg width="1" height="63" viewBox="0 0 1 63" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M0.375 63V0" stroke="url(#paint0_linear_253_262)" stroke-width="0.75" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_253_262" x1="0.875" y1="0" x2="0.875" y2="63"
+                                            gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#171717" />
+                                            <stop offset="1" stop-color="#171717" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <svg width="1" height="67" viewBox="0 0 1 67" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M0.375 67V0" stroke="url(#paint0_linear_253_263)" stroke-width="0.75" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_253_263" x1="0.875" y1="0" x2="0.875" y2="67"
+                                            gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#171717" />
+                                            <stop offset="1" stop-color="#171717" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <svg width="1" height="71" viewBox="0 0 1 71" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M0.375 71V0" stroke="url(#paint0_linear_253_272)" stroke-width="0.75" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_253_272" x1="0.875" y1="0" x2="0.875" y2="71"
+                                            gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#171717" />
+                                            <stop offset="1" stop-color="#171717" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                            </div>
+                            <p>Data Infrastructure</p>
+                            <div class="graph-label">
+                                <span>1.5X</span>
+                                <div class="dot"></div>
+                            </div>
+                        </div>
+                        <div class="graph-block-wrapper">
+                            <div class="graph-svg-block">
+                                <svg width="1" height="77" viewBox="0 0 1 77" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.3" d="M0.375 77V0" stroke="url(#paint0_linear_253_273)"
+                                        stroke-width="0.75" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_253_273" x1="0.875" y1="0" x2="0.875" y2="77"
+                                            gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#171717" />
+                                            <stop offset="1" stop-color="#171717" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <svg width="1" height="82" viewBox="0 0 1 82" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.3" d="M0.375 82V0" stroke="url(#paint0_linear_253_274)"
+                                        stroke-width="0.75" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_253_274" x1="0.875" y1="0" x2="0.875" y2="82"
+                                            gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#171717" />
+                                            <stop offset="1" stop-color="#171717" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <svg width="1" height="89" viewBox="0 0 1 89" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.3" d="M0.375 89V0" stroke="url(#paint0_linear_253_275)"
+                                        stroke-width="0.75" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_253_275" x1="0.875" y1="0" x2="0.875" y2="89"
+                                            gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#171717" />
+                                            <stop offset="1" stop-color="#171717" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <svg width="1" height="95" viewBox="0 0 1 95" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.3" d="M0.375 95V0" stroke="url(#paint0_linear_253_276)"
+                                        stroke-width="0.75" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_253_276" x1="0.875" y1="0" x2="0.875" y2="95"
+                                            gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#171717" />
+                                            <stop offset="1" stop-color="#171717" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <svg width="1" height="102" viewBox="0 0 1 102" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.3" d="M0.375 102L0.375 0" stroke="url(#paint0_linear_253_277)"
+                                        stroke-width="0.75" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_253_277" x1="0.875" y1="0" x2="0.875" y2="102"
+                                            gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#171717" />
+                                            <stop offset="1" stop-color="#171717" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <svg width="1" height="110" viewBox="0 0 1 110" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.3" d="M0.375 110V0" stroke="url(#paint0_linear_253_278)"
+                                        stroke-width="0.75" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_253_278" x1="0.875" y1="0" x2="0.875" y2="110"
+                                            gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#171717" />
+                                            <stop offset="1" stop-color="#171717" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <svg width="1" height="119" viewBox="0 0 1 119" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.3" d="M0.375 119V0" stroke="url(#paint0_linear_253_286)"
+                                        stroke-width="0.75" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_253_286" x1="0.875" y1="0" x2="0.875" y2="119"
+                                            gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#171717" />
+                                            <stop offset="1" stop-color="#171717" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                            </div>
+                            <p>Structured Finance</p>
+                            <div class="graph-label">
+                                <span>3X</span>
+                                <div class="dot"></div>
+                            </div>
+                        </div>
+                        <div class="graph-block-wrapper">
+                            <div class="graph-svg-block">
+                                <svg width="1" height="128" viewBox="0 0 1 128" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.3" d="M0.375 128V0" stroke="url(#paint0_linear_253_287)"
+                                        stroke-width="0.75" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_253_287" x1="0.875" y1="0" x2="0.875" y2="128"
+                                            gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#171717" />
+                                            <stop offset="1" stop-color="#171717" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <svg width="1" height="137" viewBox="0 0 1 137" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.3" d="M0.375 137V0" stroke="url(#paint0_linear_253_288)"
+                                        stroke-width="0.75" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_253_288" x1="0.875" y1="0" x2="0.875" y2="137"
+                                            gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#171717" />
+                                            <stop offset="1" stop-color="#171717" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <svg width="1" height="147" viewBox="0 0 1 147" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.3" d="M0.375 147V0" stroke="url(#paint0_linear_253_289)"
+                                        stroke-width="0.75" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_253_289" x1="0.875" y1="0" x2="0.875" y2="147"
+                                            gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#171717" />
+                                            <stop offset="1" stop-color="#171717" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <svg width="1" height="158" viewBox="0 0 1 158" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.3" d="M0.375 158V0" stroke="url(#paint0_linear_253_290)"
+                                        stroke-width="0.75" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_253_290" x1="0.875" y1="0" x2="0.875" y2="158"
+                                            gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#171717" />
+                                            <stop offset="1" stop-color="#171717" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <svg width="1" height="169" viewBox="0 0 1 169" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.3" d="M0.375 169V0" stroke="url(#paint0_linear_253_291)"
+                                        stroke-width="0.75" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_253_291" x1="0.875" y1="0" x2="0.875" y2="169"
+                                            gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#171717" />
+                                            <stop offset="1" stop-color="#171717" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <svg width="1" height="181" viewBox="0 0 1 181" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.3" d="M0.375 181V0" stroke="url(#paint0_linear_253_292)"
+                                        stroke-width="0.75" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_253_292" x1="0.875" y1="0" x2="0.875" y2="181"
+                                            gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#171717" />
+                                            <stop offset="1" stop-color="#171717" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <svg width="1" height="193" viewBox="0 0 1 193" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.3" d="M0.375 193V0" stroke="url(#paint0_linear_253_300)"
+                                        stroke-width="0.75" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_253_300" x1="0.875" y1="0" x2="0.875" y2="193"
+                                            gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#171717" />
+                                            <stop offset="1" stop-color="#171717" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                            </div>
+                            <p>Marketing</p>
+                            <div class="graph-label">
+                                <span>4.5X</span>
+                                <div class="dot"></div>
+                            </div>
+                        </div>
+                        <div class="graph-block-wrapper">
+                            <div class="graph-svg-block">
+                                <svg width="1" height="206" viewBox="0 0 1 206" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.3" d="M0.375 206V0" stroke="url(#paint0_linear_253_301)"
+                                        stroke-width="0.75" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_253_301" x1="0.875" y1="0" x2="0.875" y2="206"
+                                            gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#171717" />
+                                            <stop offset="1" stop-color="#171717" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <svg width="1" height="220" viewBox="0 0 1 220" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.3" d="M0.375 220V0" stroke="url(#paint0_linear_253_302)"
+                                        stroke-width="0.75" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_253_302" x1="0.875" y1="0" x2="0.875" y2="220"
+                                            gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#171717" />
+                                            <stop offset="1" stop-color="#171717" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <svg width="1" height="235" viewBox="0 0 1 235" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.3" d="M0.375 235V0" stroke="url(#paint0_linear_253_303)"
+                                        stroke-width="0.75" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_253_303" x1="0.875" y1="0" x2="0.875" y2="235"
+                                            gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#171717" />
+                                            <stop offset="1" stop-color="#171717" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <svg width="1" height="250" viewBox="0 0 1 250" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.3" d="M0.375 250V0" stroke="url(#paint0_linear_253_304)"
+                                        stroke-width="0.75" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_253_304" x1="0.875" y1="0" x2="0.875" y2="250"
+                                            gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#171717" />
+                                            <stop offset="1" stop-color="#171717" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <svg width="1" height="267" viewBox="0 0 1 267" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.3" d="M0.375 267V0" stroke="url(#paint0_linear_253_305)"
+                                        stroke-width="0.75" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_253_305" x1="0.875" y1="0" x2="0.875" y2="267"
+                                            gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#171717" />
+                                            <stop offset="1" stop-color="#171717" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <svg width="1" height="283" viewBox="0 0 1 283" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.3" d="M0.375 283V0" stroke="url(#paint0_linear_253_306)"
+                                        stroke-width="0.75" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_253_306" x1="0.875" y1="0" x2="0.875" y2="283"
+                                            gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#171717" />
+                                            <stop offset="1" stop-color="#171717" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <svg width="1" height="301" viewBox="0 0 1 301" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.3" d="M0.375 301V0" stroke="url(#paint0_linear_253_316)"
+                                        stroke-width="0.75" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_253_316" x1="0.875" y1="0" x2="0.875" y2="301"
+                                            gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#171717" />
+                                            <stop offset="1" stop-color="#171717" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                            </div>
+                            <p>Branding & design</p>
+                            <div class="graph-label">
+                                <span>6X</span>
+                                <div class="dot"></div>
+                            </div>
+                        </div>
+                        <div class="graph-block-wrapper">
+                            <div class="graph-svg-block">
+                                <svg width="1" height="320" viewBox="0 0 1 320" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.3" d="M0.375 320V0" stroke="url(#paint0_linear_253_317)"
+                                        stroke-width="0.75" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_253_317" x1="0.875" y1="0" x2="0.875" y2="320"
+                                            gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#171717" />
+                                            <stop offset="1" stop-color="#171717" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <svg width="1" height="340" viewBox="0 0 1 340" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.3" d="M0.375 340V0" stroke="url(#paint0_linear_253_318)"
+                                        stroke-width="0.75" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_253_318" x1="0.875" y1="0" x2="0.875" y2="340"
+                                            gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#171717" />
+                                            <stop offset="1" stop-color="#171717" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <svg width="1" height="361" viewBox="0 0 1 361" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.3" d="M0.375 0V361" stroke="url(#paint0_linear_253_319)"
+                                        stroke-width="0.75" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_253_319" x1="0.875" y1="0" x2="0.875" y2="361"
+                                            gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#171717" />
+                                            <stop offset="1" stop-color="#171717" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <svg width="1" height="383" viewBox="0 0 1 383" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.3" d="M0.375 0V383" stroke="url(#paint0_linear_253_320)"
+                                        stroke-width="0.75" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_253_320" x1="0.875" y1="0" x2="0.875" y2="383"
+                                            gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#171717" />
+                                            <stop offset="1" stop-color="#171717" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <svg width="1" height="410" viewBox="0 0 1 410" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.3" d="M0.375 0V410" stroke="url(#paint0_linear_253_321)"
+                                        stroke-width="0.75" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_253_321" x1="0.875" y1="0" x2="0.875" y2="410"
+                                            gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#171717" />
+                                            <stop offset="1" stop-color="#171717" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <svg width="1" height="434" viewBox="0 0 1 434" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.3" d="M0.375 0V434" stroke="url(#paint0_linear_253_322)"
+                                        stroke-width="0.75" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_253_322" x1="0.875" y1="0" x2="0.875" y2="434"
+                                            gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#171717" />
+                                            <stop offset="1" stop-color="#171717" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <svg width="1" height="460" viewBox="0 0 1 460" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.3" d="M0.375 0V460" stroke="url(#paint0_linear_253_330)"
+                                        stroke-width="0.75" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_253_330" x1="0.875" y1="0" x2="0.875" y2="460"
+                                            gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#171717" />
+                                            <stop offset="1" stop-color="#171717" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                            </div>
+                            <p>Go-to market</p>
+                            <div class="graph-label">
+                                <span>8X</span>
+                                <div class="dot"></div>
+                            </div>
+                        </div>
+                        <div class="graph-block-wrapper">
+                            <div class="graph-svg-block">
+                                <svg width="1" height="488" viewBox="0 0 1 488" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.3" d="M0.375 0V488" stroke="url(#paint0_linear_253_331)"
+                                        stroke-width="0.75" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_253_331" x1="0.875" y1="0" x2="0.875" y2="488"
+                                            gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#171717" />
+                                            <stop offset="1" stop-color="#171717" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <svg width="1" height="518" viewBox="0 0 1 518" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.3" d="M0.375 0V518" stroke="url(#paint0_linear_253_332)"
+                                        stroke-width="0.75" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_253_332" x1="0.875" y1="0" x2="0.875" y2="518"
+                                            gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#171717" />
+                                            <stop offset="1" stop-color="#171717" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <svg width="1" height="552" viewBox="0 0 1 552" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.3" d="M0.375 0V552" stroke="url(#paint0_linear_253_333)"
+                                        stroke-width="0.75" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_253_333" x1="0.875" y1="0" x2="0.875" y2="552"
+                                            gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#171717" />
+                                            <stop offset="1" stop-color="#171717" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <svg width="1" height="588" viewBox="0 0 1 588" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.3" d="M0.375 0V588" stroke="url(#paint0_linear_253_334)"
+                                        stroke-width="0.75" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_253_334" x1="0.875" y1="0" x2="0.875" y2="588"
+                                            gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#171717" />
+                                            <stop offset="1" stop-color="#171717" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <svg width="1" height="629" viewBox="0 0 1 629" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.3" d="M0.375 0V629" stroke="url(#paint0_linear_253_335)"
+                                        stroke-width="0.75" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_253_335" x1="0.875" y1="0" x2="0.875" y2="629"
+                                            gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#171717" />
+                                            <stop offset="1" stop-color="#171717" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <svg width="1" height="676" viewBox="0 0 1 676" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.3" d="M0.375 0V676" stroke="url(#paint0_linear_253_336)"
+                                        stroke-width="0.75" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_253_336" x1="0.875" y1="0" x2="0.875" y2="676"
+                                            gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#171717" />
+                                            <stop offset="1" stop-color="#171717" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                            </div>
+                            <p>Talent</p>
+                            <div class="graph-label">
+                                <span>10X</span>
+                                <div class="dot"></div>
+                            </div>
+                        </div>
+                        <div class="timeline-wrapper">
+                            <span class="timeline-bg"></span>
+                            <span class="timeline-bg active">
+                                <!-- <div class="graph-dot" id="dynamic-style"></div> -->
+                            </span>
+
+
+                            <!-- <div class="graph-label">1.5X</div> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
+    <script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
+
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        window.addEventListener("load", () => {
+
+            const container = document.querySelector(".container");
+            const sticky = document.querySelector(".sticky-wrapper");
+
+            const graphBlocks = gsap.utils.toArray(".graph-block-wrapper");
+            const graphSvgBlocks = gsap.utils.toArray(".graph-svg-block");
+            const cards = gsap.utils.toArray(".graph-card");
+
+            const timelineWrapper = document.querySelector(".timeline-wrapper");
+            const timelineActive = document.querySelector(".timeline-bg.active");
+
+            const total = graphSvgBlocks.length;
+
+            /* ===============================
+               MEASURE POSITIONS
+            =============================== */
+            let cardOffsets = [];
+            let blockEnds = [];
+
+            function measure() {
+                cardOffsets = cards.map(card => card.offsetLeft);
+
+                if (timelineWrapper) {
+                    const tlRect = timelineWrapper.getBoundingClientRect();
+                    blockEnds = graphSvgBlocks.map(block => {
+                        const rect = block.getBoundingClientRect();
+                        return rect.right - tlRect.left;
+                    });
+                }
+            }
+
+            measure();
+            window.addEventListener("resize", measure);
+
+            /* ===============================
+               DEFAULT STATE (CRITICAL)
+            =============================== */
+
+            // SVG default opacity
+            graphSvgBlocks.forEach((svgBlock, i) => {
+                const paths = svgBlock.querySelectorAll("svg path");
+                gsap.set(paths, { opacity: i === 0 ? 1 : 0.3 });
+            });
+
+            // Cards default
+            cards.forEach(card => gsap.set(card, { x: 0 }));
+
+            // Timeline default → end of first block
+            if (timelineActive && blockEnds[0] !== undefined) {
+                gsap.set(timelineActive, { width: blockEnds[0] });
+            }
+
+            // First block active by default
+            graphBlocks.forEach((block, i) => {
+                block.classList.toggle("is-active", i === 0);
+            });
+
+            /* ===============================
+               MAIN SMOOTH SCROLL
+            =============================== */
+            ScrollTrigger.create({
+                trigger: container,
+                start: "top top",
+                end: "bottom bottom",
+                pin: sticky,
+                scrub: true,
+                anticipatePin: 1,
+
+                onUpdate: self => {
+                    const progress = self.progress;
+
+                    /* ---------- SVG OPACITY (SMOOTH) ---------- */
+                    graphSvgBlocks.forEach((svgBlock, i) => {
+                        const paths = svgBlock.querySelectorAll("svg path");
+
+                        const start = i / total;
+                        const end = (i + 1) / total;
+
+                        const local = gsap.utils.clamp(
+                            0,
+                            1,
+                            (progress - start) / (end - start)
+                        );
+
+                        gsap.to(paths, {
+                            opacity: gsap.utils.mapRange(0, 1, 0.3, 1, local),
+                            duration: 0,
+                            overwrite: true
+                        });
+                    });
+
+                    /* ---------- TIMELINE (SMOOTH) ---------- */
+                    if (timelineActive && blockEnds.length) {
+                        const maxWidth = blockEnds[blockEnds.length - 1];
+                        const currentWidth = gsap.utils.mapRange(0, 1, blockEnds[0], maxWidth, progress);
+
+                        gsap.set(timelineActive, { width: currentWidth });
+
+                        /* ---------- ACTIVE CLASS (ONLY AT BLOCK END) ---------- */
+                        let activeIndex = -1;
+
+                        blockEnds.forEach((end, i) => {
+                            if (currentWidth >= end) activeIndex = i;
+                        });
+
+                        graphBlocks.forEach((block, i) => {
+                            block.classList.toggle("is-active", i === activeIndex);
+                        });
+                    }
+
+                    /* ---------- CARD SLIDER ---------- */
+                    if (cards.length && cardOffsets.length) {
+                        const maxOffset = cardOffsets[cardOffsets.length - 1];
+                        const x = -gsap.utils.mapRange(0, 1, 0, maxOffset, progress);
+
+                        cards.forEach(card => {
+                            gsap.set(card, { x });
+                        });
+                    }
+                }
+            });
+
+        });
+
+        function updateDynamicClassTop(svgEl) {
+            if (!svgEl) return;
+
+            const svgHeight = svgEl.getBoundingClientRect().height;
+
+            // find or create stylesheet
+            let styleSheet = document.getElementById("dynamic-style");
+
+            if (!styleSheet) {
+                styleSheet = document.createElement("style");
+                styleSheet.id = "dynamic-style";
+                document.head.appendChild(styleSheet);
+            }
+
+            styleSheet.innerHTML = `
+    .graph-dynamic {
+      top: ${svgHeight}px;
+    }
+  `;
+        }
+
+        updateDynamicClassTop(
+            graphSvgBlocks[0].querySelector("svg")
+        );
+
+
+    </script>
+
+</body>
+
+</html>
