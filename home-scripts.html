@@ -106,7 +106,7 @@
         pin: ".how-we-build-section-wrapper",
         anticipatePin: 1,
         pinSpacing: false,
-        markers: true,
+        markers: false,
         //   snap: {
         //   snapTo: 1/6,
         //   duration: 0.4,
@@ -214,6 +214,43 @@
         });
 
         ScrollTrigger.refresh();
+      });
+    });
+  });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    gsap.registerPlugin(ScrollTrigger);
+
+    const masks = gsap.utils.toArray(".mask-item");
+    const contents = gsap.utils.toArray(".engagement-section");
+
+    // initial mask
+    gsap.set(masks, { opacity: 0 });
+    // gsap.set(masks[0], { opacity: 1 });
+
+    // switch masks based on content scroll
+    contents.forEach((content, i) => {
+      ScrollTrigger.create({
+        trigger: content,
+        start: "top center",
+        end: "bottom bottom",
+
+        onEnter: () => {
+          gsap.to(masks[i], { opacity: 1, duration: 0.5 });
+          if (i > 0) gsap.to(masks[i - 1], { opacity: 0, duration: 0.5 });
+        },
+
+        onEnterBack: () => {
+          gsap.to(masks[i], { opacity: 1, duration: 0.5 });
+          if (i < masks.length - 1) {
+            gsap.to(masks[i + 1], { opacity: 0, duration: 0.5 });
+          }
+        },
+        onLeaveBack: () =>{
+          if (i === 0){
+            gsap.to(masks[0], {opacity: 0, duration: 0.5});
+          }
+        } 
       });
     });
   });

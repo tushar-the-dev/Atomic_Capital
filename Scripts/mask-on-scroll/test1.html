@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scroll Mask</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+
+  </head>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    .spacer {
+      height: 100vh;
+      background: #e5e5e5;
+    }
+    .mask-section {
+      height: 500vh;
+      width: 100%;
+      position: relative;
+    }
+
+    .section {
+      height: 100vh;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: sticky;
+      /* opacity: 0; */
+      top: 0;
+    }
+
+    .background-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      width: 100%;
+      opacity: 0.4;
+      z-index: -1;
+    }
+
+    .section.first {
+      background-color: rgba(255, 0, 0, 0.308);
+    }
+  </style>
+  <body>
+    <section class="spacer"></section>
+    <section class="mask-section">
+      <div class="background-video">
+        <video autoplay muted loop playsinline>
+          <source src="./../../Assets/videos/Pixel_Dots.mp4" type="video/mp4" />
+        </video>
+      </div>
+      <div class="section first">content 1</div>
+      <div class="section second">content 2</div>
+      <div class="section third">content 3</div>
+      <div class="section forth">content 4</div>
+      <div class="section fifth">content 5</div>
+    </section>
+    <section class="spacer"></section>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", ()=>{
+             gsap.registerPlugin(ScrollTrigger);
+             const container = document.querySelector(".mask-section");
+
+               const sections = gsap.utils.toArray(".mask-section .section");
+
+            //    Make sure only first is visible initially
+  gsap.set(sections, { opacity: 0 });
+  gsap.set(sections[0], { opacity: 1 });
+
+
+
+  const tl = gsap.timeline({
+    scrollTrigger: {
+      trigger: ".mask-section",
+      start: "top top",
+      end: () => "+=" + window.innerHeight * sections.length,
+      scrub: true,
+    //   pin: true,
+    //   anticipatePin: 1,
+      markers: true
+    }
+  });
+
+   sections.forEach((section, i) => {
+    tl.to(section, { opacity: 1, duration: 0.5 })
+      .to(section, { opacity: 0, duration: 0.5 }, "+=0.5");
+  });
+        })
+    </script>
+  </body>
+</html>
