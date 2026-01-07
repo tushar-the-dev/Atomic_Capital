@@ -174,13 +174,22 @@
   //Graph
   document.addEventListener("DOMContentLoaded", function () {
     const cardsWrapper = document.querySelector(".how-we-build-cards-wrapper");
-    const cardsBlocks = document.querySelector(".how-we-build-card-blocks");
-    const cards = cardsWrapper.querySelectorAll(".how-we-build-card-block");
+    const cardsBlocks = cardsWrapper.querySelector(".how-we-build-card-blocks");
+    const cards = cardsBlocks.querySelectorAll(".how-we-build-card-block");
 
     const cardsWrapperWidth = cardsBlocks.scrollWidth;
     const lastCardWidth = cards[5].offsetWidth;
     const TOTAL_BLOCKS = 6;
     const cardsWrapperShift = cardsWrapperWidth - lastCardWidth;
+
+
+    //-------progress-bar
+    const progressLabelsWrapper = document.querySelector(".progress-labels");
+    const progressLabels = progressLabelsWrapper.querySelectorAll(".progress-label");
+
+    const firstProgressLabelWidth = progressLabels[0].offsetWidth;
+
+    gsap.set(".svg-progress-bar", { width: firstProgressLabelWidth, ease: "power1.out", duration: 0.5});
 
     // how far cards need to travel in total
     // const TOTAL_CARD_SHIFT = lastcardWidth * (TOTAL_BLOCKS - 1);
@@ -199,13 +208,13 @@
         start: "top top",
         end: "bottom bottom",
         scrub: true,
-        markers: true,
-          snap: {
-          snapTo: 1/6,
-          duration: 0.4,
-          ease: "power2.out",
-          delay: 0
-        },
+        // markers: true,
+        //   snap: {
+        //   snapTo: 1/6,
+        //   duration: 0.4,
+        //   ease: "power2.out",
+        //   delay: 0
+        // },
       },
     });
 
