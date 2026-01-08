@@ -1,4 +1,51 @@
 <script>
+  // CURSOR_POINTER
+  (() => {
+    const cursor = document.querySelector(".cursor-pointer");
+    if (!cursor) return;
+
+    let mouseX = 0;
+    let mouseY = 0;
+    let currentX = 0;
+    let currentY = 0;
+
+    const speed = 0.15; // smaller = more lag, smoother
+
+    let started = false;
+
+    window.addEventListener("mousemove", (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      if (!started) {
+        currentX = mouseX;
+        currentY = mouseY;
+        started = true;
+      }
+    });
+
+    const hoverTargets = document.querySelectorAll("a, button");
+
+    hoverTargets.forEach((el) => {
+      el.addEventListener("mouseenter", () =>
+        cursor.classList.add("is-active")
+      );
+      el.addEventListener("mouseleave", () =>
+        cursor.classList.remove("is-active")
+      );
+    });
+
+    function animate() {
+      currentX += (mouseX - currentX) * speed;
+      currentY += (mouseY - currentY) * speed;
+
+      cursor.style.transform = `translate(${currentX}px, ${currentY}px) translate(-50%, -50%)`;
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  })();
+
   document.addEventListener("DOMContentLoaded", function () {
     const allSlides = document.querySelectorAll(".marquee-content");
     const cloneCount = 3;

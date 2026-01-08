@@ -17,6 +17,21 @@
     padding: 0;
   }
 
+  .cursor-pointer {
+    will-change: transform;
+  }
+
+  .cursor-pointer.is-active {
+    transform: scale(2);
+  }
+
+  /* Hide on touch devices */
+  @media (hover: none) {
+    .cursor-pointer {
+      display: none;
+    }
+  }
+
   /* Scroll lock */
   /* body.no-scroll {
     overflow: hidden;
