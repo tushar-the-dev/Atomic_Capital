@@ -1,86 +1,83 @@
- html {
-    font-size: 0.833vw;
-    scrollbar-width: none;
-    height: fit-content;
-    -webkit-clip-path: inset(0 0 0 0);
-    clip-path: inset(0 0 0 0);
-  }
-  .spacer{
-    height: 100vh;
-    background: #f5f5f5;
-  }
+html {
+  font-size: 0.833vw;
+  scrollbar-width: none;
+  height: fit-content;
+  -webkit-clip-path: inset(0 0 0 0);
+  clip-path: inset(0 0 0 0);
+}
+.spacer {
+  height: 100vh;
+  background: #f5f5f5;
+}
 
-  ::-webkit-scrollbar {
-    display: none;
-  }
+::-webkit-scrollbar {
+  display: none;
+}
 
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-  
-    
-  /* Scroll lock */
-  /* body.no-scroll {
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Scroll lock */
+/* body.no-scroll {
     overflow: hidden;
   } */
 
-  /* Remove default anchor link styles */
-  a {
-    color: inherit;
-    text-decoration: none;
-    background: none;
-  }
-
-  /* Optional: remove focus outline (accessibility note below) */
-  a:focus {
-    outline: none;
-  }
-
-  /* Keep hover/active states consistent */
-  a:hover,
-  a:active,
-  a:visited {
-    color: none;
-    text-decoration: none;
-  }
-
-.section_how_we_build{
-    padding-top: 7.5rem;
-    height: 200vh;
+/* Remove default anchor link styles */
+a {
+  color: inherit;
+  text-decoration: none;
+  background: none;
 }
 
-.container{
-    margin: 0 12.5rem;
+/* Optional: remove focus outline (accessibility note below) */
+a:focus {
+  outline: none;
 }
-.how-we-build-section-wrapper{
-    
-    height: 46.5rem;
-    /* height: 100vh; */
-    /* border: 1px solid blue; */
-    width: 100%;
+
+/* Keep hover/active states consistent */
+a:hover,
+a:active,
+a:visited {
+  color: none;
+  text-decoration: none;
 }
-.graph-block{
+
+.section_how_we_build {
+  padding-top: 7.5rem;
+  height: 200vh;
+}
+
+.container {
+  margin: 0 12.5rem;
+}
+.how-we-build-section-wrapper {
+  height: 46.5rem;
+  /* height: 100vh; */
+  /* border: 1px solid blue; */
+  width: 100%;
+}
+.graph-block {
   background: red;
 }
 .svg-pin {
   /* position: sticky;
   top: 0; */
-  /* height: 10vh; */ 
+  /* height: 10vh; */
   /* height: 200vh;  */
   /* height: 300vh; */
   /* border: 1px solid red; */
 }
 
-.svg-wrapper{
-    /* height: 100vh; */
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
+.svg-wrapper {
+  /* height: 100vh; */
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 /* #barsSvg{
@@ -88,34 +85,40 @@
     height: 100%;
 } */
 
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.svg-progress-container{
-    /* border-top: 1px solid rgb(23, 23, 23, 0.2); */
-    width: 100%;
-    height: 1px;
-    background: rgb(23, 23, 23, 0.2);
+.svg-progress-container {
+  /* border-top: 1px solid rgb(23, 23, 23, 0.2); */
+  width: 100%;
+  height: 1px;
+  background: rgb(23, 23, 23, 0.2);
 }
 
-.svg-progress-bar{
-    position: relative;
-    width: 0%;
-    height: 1px;
-    background: rgb(23, 23, 23, 1);
+.svg-progress-bar {
+  position: relative;
+  width: 0%;
+  height: 1px;
+  background: rgb(23, 23, 23, 1);
 }
 
-.svg-progress-thumb{
-    position: absolute;
-    right: 0;
-    top:0;
-    /* transform: translateX(-50%); */
-    height: 12px;
-    background-color: #171717;
-    width: 1px;
-    z-index: 99;
-    transform: translateY(-50%);
+.svg-progress-thumb {
+  position: absolute;
+  right: 0;
+  top: 0;
+  /* transform: translateX(-50%); */
+  height: 12px;
+  background-color: #171717;
+  width: 1px;
+  z-index: 99;
+  transform: translateY(-50%);
+}
+
+#block-1 {
+  position: relative;
+  background: red;
+  border: 1px solid red;
 }

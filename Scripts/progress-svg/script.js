@@ -5,6 +5,10 @@ const paths = [...document.querySelectorAll("#barsSvg path")];
 const TOTAL_STEPS = 6;
 const STEP = 1 / TOTAL_STEPS;
 
+const blocks = document.querySelectorAll('.graph-path-block');
+
+console.log(blocks);
+
 const tl = gsap.timeline({
   scrollTrigger: {
     trigger: ".section_how_we_build",
@@ -14,12 +18,12 @@ const tl = gsap.timeline({
     pin: ".how-we-build-section-wrapper",
     anticipatePin: 1,
     markers: true,
-  //   snap: {
-  //   snapTo: 1/6,
-  //   duration: 0.4,
-  //   ease: "power2.out",
-  //   delay: 0
-  // },
+    //   snap: {
+    //   snapTo: 1/6,
+    //   duration: 0.4,
+    //   ease: "power2.out",
+    //   delay: 0
+    // },
   }
 });
 
@@ -29,43 +33,46 @@ const tl = gsap.timeline({
 //          ease: "none",
 
 //     }, 0
-// )
+// );
 
-;
+blocks.forEach((block, blockNumber) => {
 
-paths.forEach((path, i) => {
-  const stroke = path.getAttribute("stroke");
-  if (!stroke || !stroke.startsWith("url")) return;
+  const paths = block.querySelectorAll('path');
 
-  const gradientId = stroke.match(/#([^)]+)/)?.[1];
-  if (!gradientId) return;
+  paths.forEach((path, i) => {
+    const stroke = path.getAttribute("stroke");
+    if (!stroke || !stroke.startsWith("url")) return;
 
-  const gradient = document.getElementById(gradientId);
-  if (!gradient) return;
+    const gradientId = stroke.match(/#([^)]+)/)?.[1];
+    if (!gradientId) return;
 
-  const stops = gradient.querySelectorAll("stop");
-  if (stops.length < 2) return;
+    const gradient = document.getElementById(gradientId);
+    if (!gradient) return;
 
-  const [topStop, bottomStop] = stops;
+    const stops = gradient.querySelectorAll("stop");
+    if (stops.length < 2) return;
 
-  // Initial state
-  gsap.set(topStop, { stopOpacity: 0.2 });
-  gsap.set(bottomStop, { stopOpacity: 0.05 });
+    const [topStop, bottomStop] = stops;
 
-  // 👇 one path per scroll segment
-  tl.to(topStop, {
-    stopOpacity: 1,
-    ease: "none",
-    duration: 1
+    // Initial state
+    gsap.set(topStop, { stopOpacity: 0.2 });
+    gsap.set(bottomStop, { stopOpacity: 0.05 });
+
+    // 👇 one path per scroll segment
+    tl.to(topStop, {
+      stopOpacity: 1,
+      ease: "none",
+      duration: 1
+    });
+
+    tl.to(bottomStop, {
+      stopOpacity: 0,
+      ease: "none",
+      duration: 1
+    }, "<"); // run together with topStop
   });
 
-  tl.to(bottomStop, {
-    stopOpacity: 0,
-    ease: "none",
-    duration: 1
-  }, "<"); // run together with topStop
 });
-
 // ✅ Add progress bar synced to full timeline
 tl.to(".svg-progress-bar", {
   width: "100%",
