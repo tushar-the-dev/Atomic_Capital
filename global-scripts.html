@@ -25,21 +25,28 @@
 
     const hoverTargets = document.querySelectorAll("a, button");
 
+    let targetScale = 1;
+    let currentScale = 1;
+
     hoverTargets.forEach((el) => {
-      el.addEventListener("mouseenter", () =>
-        cursor.classList.add("is-active")
-      );
-      el.addEventListener("mouseleave", () =>
-        cursor.classList.remove("is-active")
-      );
+      el.addEventListener("mouseenter", () => {
+        targetScale = 2;
+      });
+      el.addEventListener("mouseleave", () => {
+        targetScale = 1;
+      });
     });
 
     function animate() {
       currentX += (mouseX - currentX) * speed;
       currentY += (mouseY - currentY) * speed;
+      currentScale += (targetScale - currentScale) * 0.2;
 
-      cursor.style.transform = `translate(${currentX}px, ${currentY}px) translate(-50%, -50%)`;
-
+      cursor.style.transform = `
+    translate(${currentX}px, ${currentY}px)
+    translate(-50%, -50%)
+    scale(${currentScale})
+  `;
       requestAnimationFrame(animate);
     }
 
