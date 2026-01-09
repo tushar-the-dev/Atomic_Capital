@@ -418,6 +418,31 @@
     const initialProgressBarWidth =
       totalProgressBarWidth - firstProgressLabelWidth;
 
+    const thumb = document.querySelector(".progress-bg-thumb.is-left");
+
+    function update() {
+      const rect = thumb.getBoundingClientRect();
+
+      // center of thumb
+      const x = rect.left + rect.width / 2;
+      const y = rect.top + rect.height / 2;
+
+      // avoid self-detection
+      thumb.style.visibility = "hidden";
+      const elBelow = document.elementFromPoint(x, y);
+      thumb.style.visibility = "visible";
+
+      const isOverLabel =
+        elBelow && elBelow.closest(".progress-bar-label-text");
+
+      gsap.to(thumb, {
+        opacity: isOverLabel ? 0 : 1,
+        duration: 0.2,
+        ease: "power2.out",
+        overwrite: true,
+      });
+    }
+
     gsap.set(".graph-progress-bar", {
       width: initialProgressBarWidth,
       ease: "power1.out",
@@ -448,6 +473,7 @@
         // },
 
         onUpdate(self) {
+          update(); //update progress-thumb behaviour on scroll
           const progress = self.progress;
 
           textLabels.forEach((label, i) => {
