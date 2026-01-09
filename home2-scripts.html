@@ -318,7 +318,7 @@
 
   //Approach-svg
   document.addEventListener("DOMContentLoaded", function () {
-    const approadContainer = document.getElementById('approachContainer')
+    const approadContainer = document.getElementById("approachContainer");
     const svg = document.querySelector(".approach-svg");
     const arrows = document.querySelectorAll(".approach-svg .arrow");
 
@@ -382,30 +382,56 @@
       //   console.log(tl.isActive);
     });
   });
-  
-  
-  
- //Graph
+
+  //Graph
   document.addEventListener("DOMContentLoaded", function () {
     const cardsWrapper = document.querySelector(".how-we-build-cards-wrapper");
-    const cardsBlocks = document.querySelector(".how-we-build-card-blocks");
-    const cards = cardsWrapper.querySelectorAll(".how-we-build-card-block");
+    const cardsBlocks = cardsWrapper.querySelector(".how-we-build-card-blocks");
+    const cards = cardsBlocks.querySelectorAll(".how-we-build-card-block");
+
+    const blocks = document.querySelectorAll(".graph-path-block");
+    const progressBar = document.querySelector(".graph-progress-bar");
+    const textLabels = [...blocks].map((_, i) =>
+      document.querySelector(`#block-label-${i + 1}`)
+    );
+
+    const TOTAL_BLOCKS = blocks.length;
+    const progressSteps = [...blocks].map((_, i) => i / (TOTAL_BLOCKS - 1));
+    const TOLERANCE = 0.1;
+
+    textLabels.forEach((label) => {
+      if (label) gsap.set(label, { opacity: 0 });
+    });
 
     const cardsWrapperWidth = cardsBlocks.scrollWidth;
     const lastCardWidth = cards[5].offsetWidth;
-    const TOTAL_BLOCKS = 6;
+    // const TOTAL_BLOCKS = 6;
     const cardsWrapperShift = cardsWrapperWidth - lastCardWidth;
+
+    //-------progress-bar
+    const progressLabelsWrapper = document.querySelector(".progress-labels");
+    const progressLabels =
+      progressLabelsWrapper.querySelectorAll(".progress-label");
+
+    const firstProgressLabelWidth = progressLabels[0].offsetWidth;
+    const totalProgressBarWidth = progressBar.scrollWidth;
+    const initialProgressBarWidth =
+      totalProgressBarWidth - firstProgressLabelWidth;
+
+    gsap.set(".graph-progress-bar", {
+      width: initialProgressBarWidth,
+      ease: "power1.out",
+      duration: 0.5,
+    });
 
     // how far cards need to travel in total
     // const TOTAL_CARD_SHIFT = lastcardWidth * (TOTAL_BLOCKS - 1);
 
     gsap.registerPlugin(ScrollTrigger);
 
-    const paths = [...document.querySelectorAll("#barsSvg path")];
+    // const paths = [...document.querySelectorAll("#barsSvg path")];
     const TOTAL_STEPS = 6;
     const STEP = 1 / TOTAL_STEPS;
-
-    let blockNumber = 0;
 
     const tl = gsap.timeline({
       scrollTrigger: {
@@ -420,52 +446,130 @@
         //   ease: "power2.out",
         //   delay: 0
         // },
+
+        onUpdate(self) {
+          const progress = self.progress;
+
+          textLabels.forEach((label, i) => {
+            if (!label) return;
+
+            const isActive = Math.abs(progress - progressSteps[i]) < TOLERANCE;
+
+            gsap.set(label, {
+              opacity: isActive ? 1 : 0,
+            });
+          });
+        },
       },
     });
 
-    paths.forEach((path, i) => {
-      const stroke = path.getAttribute("stroke");
-      if (!stroke || !stroke.startsWith("url")) return;
+    // paths.forEach((path, i) => {
+    //   const stroke = path.getAttribute("stroke");
+    //   if (!stroke || !stroke.startsWith("url")) return;
 
-      const gradientId = stroke.match(/#([^)]+)/)?.[1];
-      if (!gradientId) return;
+    //   const gradientId = stroke.match(/#([^)]+)/)?.[1];
+    //   if (!gradientId) return;
 
-      const gradient = document.getElementById(gradientId);
-      if (!gradient) return;
+    //   const gradient = document.getElementById(gradientId);
+    //   if (!gradient) return;
 
-      const stops = gradient.querySelectorAll("stop");
-      if (stops.length < 2) return;
+    //   const stops = gradient.querySelectorAll("stop");
+    //   if (stops.length < 2) return;
 
-      const [topStop, bottomStop] = stops;
+    //   const [topStop, bottomStop] = stops;
 
-      // Initial state
-      gsap.set(topStop, { stopOpacity: 0.2 });
-      gsap.set(bottomStop, { stopOpacity: 0.05 });
+    //   // Initial state
+    //   gsap.set(topStop, { stopOpacity: 0.2 });
+    //   gsap.set(bottomStop, { stopOpacity: 0.05 });
 
+    //   // 👇 one path per scroll segment
+    //   tl.to(topStop, {
+    //     stopOpacity: 1,
+    //     ease: "none",
+    //     duration: 1,
+    //   });
 
-      
+    //   tl.to(
+    //     bottomStop,
+    //     {
+    //       stopOpacity: 0,
+    //       ease: "none",
+    //       duration: 1,
+    //     },
+    //     "<"
+    //   ); // run together with topStop
 
-      // 👇 one path per scroll segment
-      tl.to(topStop, {
-        stopOpacity: 1,
-        ease: "none",
-        duration: 1,
+    // });
+
+    /* ----------------------------------------
+   1️⃣ FILL BLOCK 1 IMMEDIATELY (NO ANIMATION)
+----------------------------------------- */
+    (() => {
+      const firstBlock = blocks[0];
+      if (!firstBlock) return;
+
+      firstBlock.querySelectorAll("path").forEach((path) => {
+        const stroke = path.getAttribute("stroke");
+        if (!stroke?.startsWith("url")) return;
+
+        const gradientId = stroke.match(/#([^)]+)/)?.[1];
+        const gradient = document.getElementById(gradientId);
+        if (!gradient) return;
+
+        const stops = gradient.querySelectorAll("stop");
+        if (stops.length < 2) return;
+
+        const [topStop, bottomStop] = stops;
+
+        gsap.set(topStop, { stopOpacity: 1 });
+        gsap.set(bottomStop, { stopOpacity: 0 });
       });
+    })();
 
-      tl.to(
-        bottomStop,
-        {
-          stopOpacity: 0,
+    /* ----------------------------------------
+   2️⃣ ANIMATE FROM BLOCK 2 ONWARDS
+----------------------------------------- */
+    blocks.forEach((block, blockIndex) => {
+      if (blockIndex === 0) return; // 👈 skip block 1
+
+      block.querySelectorAll("path").forEach((path) => {
+        const stroke = path.getAttribute("stroke");
+        if (!stroke?.startsWith("url")) return;
+
+        const gradientId = stroke.match(/#([^)]+)/)?.[1];
+        const gradient = document.getElementById(gradientId);
+        if (!gradient) return;
+
+        const stops = gradient.querySelectorAll("stop");
+        if (stops.length < 2) return;
+
+        const [topStop, bottomStop] = stops;
+
+        // Initial (empty) state for animated blocks
+        gsap.set(topStop, { stopOpacity: 0.2 });
+        gsap.set(bottomStop, { stopOpacity: 0.05 });
+
+        // Animate fill
+        tl.to(topStop, {
+          stopOpacity: 1,
           ease: "none",
           duration: 1,
-        },
-        "<"
-      ); // run together with topStop
+        });
 
+        tl.to(
+          bottomStop,
+          {
+            stopOpacity: 0,
+            ease: "none",
+            duration: 1,
+          },
+          "<"
+        );
+      });
     });
 
-   //       //-----------------------
- tl.to(
+    //       //-----------------------
+    tl.to(
       cardsBlocks,
       {
         x: -cardsWrapperShift,
@@ -473,23 +577,20 @@
         duration: tl.duration(), // 👈 spans entire timeline
       },
       0
-     // 👈 start at beginning
+      // 👈 start at beginning
     );
-  
-   
 
-//       //------------------------
+    //       //------------------------
 
     // ✅ Add progress bar synced to full timeline
     tl.to(
-      ".svg-progress-bar",
+      ".graph-progress-bar",
       {
-        width: "100%",
+        width: "0%",
         ease: "none",
         duration: tl.duration(), // match entire timeline
       },
       0
     );
   });
-  
 </script>

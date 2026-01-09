@@ -178,13 +178,14 @@
     const cards = cardsBlocks.querySelectorAll(".how-we-build-card-block");
 
     const blocks = document.querySelectorAll(".graph-path-block");
+    const progressBar = document.querySelector(".graph-progress-bar");
     const textLabels = [...blocks].map((_, i) =>
       document.querySelector(`#block-label-${i + 1}`)
     );
 
     const TOTAL_BLOCKS = blocks.length;
     const progressSteps = [...blocks].map((_, i) => i / (TOTAL_BLOCKS - 1));
-    const TOLERANCE = 0.01;
+    const TOLERANCE = 0.1;
 
     textLabels.forEach((label) => {
       if (label) gsap.set(label, { opacity: 0 });
@@ -201,9 +202,12 @@
       progressLabelsWrapper.querySelectorAll(".progress-label");
 
     const firstProgressLabelWidth = progressLabels[0].offsetWidth;
+    const totalProgressBarWidth = progressBar.scrollWidth;
+    const initialProgressBarWidth =
+      totalProgressBarWidth - firstProgressLabelWidth;
 
-    gsap.set(".svg-progress-bar", {
-      width: firstProgressLabelWidth,
+    gsap.set(".graph-progress-bar", {
+      width: initialProgressBarWidth,
       ease: "power1.out",
       duration: 0.5,
     });
@@ -368,9 +372,9 @@
 
     // ✅ Add progress bar synced to full timeline
     tl.to(
-      ".svg-progress-bar",
+      ".graph-progress-bar",
       {
-        width: "100%",
+        width: "0%",
         ease: "none",
         duration: tl.duration(), // match entire timeline
       },
