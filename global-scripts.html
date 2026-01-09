@@ -12,6 +12,7 @@
     const speed = 0.15; // smaller = more lag, smoother
 
     let started = false;
+    let cursorHidden = false;
 
     window.addEventListener("mousemove", (e) => {
       mouseX = e.clientX;
@@ -39,10 +40,29 @@
       currentY += (mouseY - currentY) * speed;
 
       cursor.style.transform = `translate(${currentX}px, ${currentY}px) translate(-50%, -50%)`;
+
+      const dx = mouseX - currentX;
+      const dy = mouseY - currentY;
+      const distance = Math.hypot(dx, dy);
+
+      if (distance < 6 && !cursorHidden) {
+        document.body.classList.add("cursor-hidden");
+        cursorHidden = true;
+      } else if (distance >= 6 && cursorHidden) {
+        document.body.classList.remove("cursor-hidden");
+        cursorHidden = false;
+      }
+
       requestAnimationFrame(animate);
     }
 
     animate();
+
+    //Clean Up
+    window.addEventListener("blur", () => {
+      document.body.classList.remove("cursor-hidden");
+      cursorHidden = false;
+    });
   })();
 
   document.addEventListener("DOMContentLoaded", function () {
