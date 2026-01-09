@@ -1,14 +1,51 @@
 gsap.registerPlugin(ScrollTrigger);
 
+const blocks = document.querySelectorAll(".graph-path-block");
 
-const paths = [...document.querySelectorAll("#barsSvg path")];
-const TOTAL_STEPS = 6;
-const STEP = 1 / TOTAL_STEPS;
+/* ----------------------------------------
+   HELPERS
+----------------------------------------- */
+const getGradientStops = (path) => {
+  const stroke = path.getAttribute("stroke");
+  if (!stroke?.startsWith("url")) return null;
 
-const blocks = document.querySelectorAll('.graph-path-block');
+  const gradientId = stroke.match(/#([^)]+)/)?.[1];
+  const gradient = document.getElementById(gradientId);
+  if (!gradient) return null;
 
-console.log(blocks);
+  const stops = gradient.querySelectorAll("stop");
+  if (stops.length < 2) return null;
 
+  return { top: stops[0], bottom: stops[1] };
+};
+
+const getLabel = (index) =>
+  document.querySelector(`#block-label-${index + 1}`);
+
+/* ----------------------------------------
+   INITIAL STATE
+----------------------------------------- */
+
+// Hide all labels
+blocks.forEach((_, i) => {
+  const label = getLabel(i);
+  if (label) gsap.set(label, { opacity: 0 });
+});
+
+// Pre-fill BLOCK 1
+if (blocks[0]) {
+  blocks[0].querySelectorAll("path").forEach(path => {
+    const stops = getGradientStops(path);
+    if (!stops) return;
+
+    gsap.set(stops.top, { stopOpacity: 1 });
+    gsap.set(stops.bottom, { stopOpacity: 0 });
+  });
+}
+
+/* ----------------------------------------
+   TIMELINE
+----------------------------------------- */
 const tl = gsap.timeline({
   scrollTrigger: {
     trigger: ".section_how_we_build",
@@ -17,65 +54,60 @@ const tl = gsap.timeline({
     scrub: true,
     pin: ".how-we-build-section-wrapper",
     anticipatePin: 1,
-    markers: true,
-    //   snap: {
-    //   snapTo: 1/6,
-    //   duration: 0.4,
-    //   ease: "power2.out",
-    //   delay: 0
-    // },
+    markers: true
   }
 });
 
-// tl.to(".svg-progress-bar",
-//     {
-//          width: "100%",
-//          ease: "none",
+/* ----------------------------------------
+   BLOCKS 2+ WITH WINDOWED LABELS
+----------------------------------------- */
+blocks.forEach((block, blockIndex) => {
+  if (blockIndex === 0) return;
 
-//     }, 0
-// );
+  const label = getLabel(blockIndex);
 
-blocks.forEach((block, blockNumber) => {
+  /* ---- LABEL ON (ENTER BLOCK) ---- */
+  tl.to(label, {
+    opacity: 1,
+    duration: 0.4,
 
-  const paths = block.querySelectorAll('path');
 
-  paths.forEach((path, i) => {
-    const stroke = path.getAttribute("stroke");
-    if (!stroke || !stroke.startsWith("url")) return;
-
-    const gradientId = stroke.match(/#([^)]+)/)?.[1];
-    if (!gradientId) return;
-
-    const gradient = document.getElementById(gradientId);
-    if (!gradient) return;
-
-    const stops = gradient.querySelectorAll("stop");
-    if (stops.length < 2) return;
-
-    const [topStop, bottomStop] = stops;
-
-    // Initial state
-    gsap.set(topStop, { stopOpacity: 0.2 });
-    gsap.set(bottomStop, { stopOpacity: 0.05 });
-
-    // 👇 one path per scroll segment
-    tl.to(topStop, {
-      stopOpacity: 1,
-      ease: "none",
-      duration: 1
-    });
-
-    tl.to(bottomStop, {
-      stopOpacity: 0,
-      ease: "none",
-      duration: 1
-    }, "<"); // run together with topStop
   });
 
+  /* ---- PATH FILL (BLOCK DURATION) ---- */
+  block.querySelectorAll("path").forEach(path => {
+    const stops = getGradientStops(path);
+    if (!stops) return;
+
+    gsap.set(stops.top, { stopOpacity: 0.2 });
+    gsap.set(stops.bottom, { stopOpacity: 0.05 });
+
+    tl.to(stops.top, {
+      stopOpacity: 1,
+      duration: 1,
+      ease: "none"
+    });
+
+    tl.to(stops.bottom, {
+      stopOpacity: 0,
+      duration: 1,
+      ease: "none"
+    }, "<");
+  });
+
+  /* ---- LABEL OFF (EXIT BLOCK) ---- */
+  tl.to(label, {
+    opacity: 0,
+    duration: 0.01,
+    ease: "none"
+  });
 });
-// ✅ Add progress bar synced to full timeline
+
+/* ----------------------------------------
+   PROGRESS BAR
+----------------------------------------- */
 tl.to(".svg-progress-bar", {
   width: "100%",
   ease: "none",
-  duration: tl.duration() // match entire timeline
-}, 0)
+  duration: tl.duration()
+}, 0);

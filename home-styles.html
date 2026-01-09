@@ -1,14 +1,14 @@
 <style>
-    /* active state */
-.nav-link-dropdown.is-open {
-  height: var(--menu-height);
-}
+  /* active state */
+  .nav-link-dropdown.is-open {
+    height: var(--menu-height);
+  }
 
-.nav-dropdown-link:hover{
-color: rgba(23, 23, 23, 1);
-}
+  .nav-dropdown-link:hover {
+    color: rgba(23, 23, 23, 1);
+  }
 
-.atomic-lottie::after {
+  .atomic-lottie::after {
     content: "";
     position: absolute;
     top: 0;
@@ -17,9 +17,9 @@ color: rgba(23, 23, 23, 1);
     height: 100%;
     z-index: 12;
     background: linear-gradient(180deg, transparent 80%, white);
-}
+  }
 
-.atomic-lottie::before {
+  .atomic-lottie::before {
     content: "";
     position: absolute;
     top: 0;
@@ -28,10 +28,9 @@ color: rgba(23, 23, 23, 1);
     height: 100%;
     z-index: 12;
     background: linear-gradient(0deg, transparent 80%, white);
-}
+  }
 
- .mask-item {
-   
+  .mask-item {
     opacity: 0;
     mask-repeat: no-repeat;
     mask-position: center;
@@ -39,40 +38,40 @@ color: rgba(23, 23, 23, 1);
     -webkit-mask-position: center;
   }
 
+  .mask-item video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 
-      .mask-item video {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
+  .mask-item.mask-1 {
+    mask-image: url("https://cdn.prod.website-files.com/69536206688e50587d80f9e2/695d018d693f0824df3cf9ed_Vector%20(3).png");
+    -webkit-mask-image: url("https://cdn.prod.website-files.com/69536206688e50587d80f9e2/695d018d693f0824df3cf9ed_Vector%20(3).png");
+    mask-size: 100% 100%;
+    -webkit-mask-size: 100% 100%;
+  }
 
-      .mask-item.mask-1 {
-       mask-image: url("https://cdn.prod.website-files.com/69536206688e50587d80f9e2/695d018d693f0824df3cf9ed_Vector%20(3).png");
-        -webkit-mask-image: url("https://cdn.prod.website-files.com/69536206688e50587d80f9e2/695d018d693f0824df3cf9ed_Vector%20(3).png");
-        mask-size: 100% 100%;
-        -webkit-mask-size: 100% 100%;
-       
-      }
+  .mask-item.mask-2 {
+    mask-image: url("https://cdn.prod.website-files.com/69536206688e50587d80f9e2/695d05de8a85ee420a6c8bfd_Vector%20(4).png");
+    -webkit-mask-image: url("https://cdn.prod.website-files.com/69536206688e50587d80f9e2/695d05de8a85ee420a6c8bfd_Vector%20(4).png");
+    -webkit-mask-size: 50% 50%;
+    mask-size: 50% 50%;
+  }
 
-      .mask-item.mask-2 {
-        mask-image: url("https://cdn.prod.website-files.com/69536206688e50587d80f9e2/695d05de8a85ee420a6c8bfd_Vector%20(4).png");
-        -webkit-mask-image: url("https://cdn.prod.website-files.com/69536206688e50587d80f9e2/695d05de8a85ee420a6c8bfd_Vector%20(4).png");
-        -webkit-mask-size: 50% 50%;
-        mask-size: 50% 50%;
-      }
-      
-      .mask-item.mask-3 {
-        mask-image: url("https://cdn.prod.website-files.com/69536206688e50587d80f9e2/695d05de19e25f0fe3a20ba7_Vector%20(5).png");
-        -webkit-mask-image: url("https://cdn.prod.website-files.com/69536206688e50587d80f9e2/695d05de19e25f0fe3a20ba7_Vector%20(5).png");
-        -webkit-mask-size: 34rem 25.375rem;
-        mask-size: 34rem 25.375rem;
-      }
-      
-      
-      .mask-item.mask-4{
-      mask-image: url("https://cdn.prod.website-files.com/69536206688e50587d80f9e2/695d05debe6fa832deeedbd2_Vector%20(6).png");
-      -webkit-mask-image: url("https://cdn.prod.website-files.com/69536206688e50587d80f9e2/695d05debe6fa832deeedbd2_Vector%20(6).png");
-      -webkit-mask-size: 21rem 25.125rem;
+  .mask-item.mask-3 {
+    mask-image: url("https://cdn.prod.website-files.com/69536206688e50587d80f9e2/695d05de19e25f0fe3a20ba7_Vector%20(5).png");
+    -webkit-mask-image: url("https://cdn.prod.website-files.com/69536206688e50587d80f9e2/695d05de19e25f0fe3a20ba7_Vector%20(5).png");
+    -webkit-mask-size: 34rem 25.375rem;
+    mask-size: 34rem 25.375rem;
+  }
 
-      }
+  .mask-item.mask-4 {
+    mask-image: url("https://cdn.prod.website-files.com/69536206688e50587d80f9e2/695d05debe6fa832deeedbd2_Vector%20(6).png");
+    -webkit-mask-image: url("https://cdn.prod.website-files.com/69536206688e50587d80f9e2/695d05debe6fa832deeedbd2_Vector%20(6).png");
+    -webkit-mask-size: 21rem 25.125rem;
+  }
+
+  .block-label {
+    transition: 0.4s opacity ease-in;
+  }
 </style>
