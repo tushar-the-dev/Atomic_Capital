@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Canvas Dot Pulse Grid</title>
+
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html, body {
+    background: #0e0e0e;
+  }
+
+  .dots-container {
+    width: 500px;
+    height: 500px;
+    border: 1px solid red;
+    margin: 40px;
+  }
+
+  canvas {
+    display: block; /* IMPORTANT */
+    width: 100%;
+    height: 100%;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="dots-container">
+  <canvas id="canvas"></canvas>
+</div>
+
+<script>
+  const canvas = document.getElementById("canvas");
+  const ctx = canvas.getContext("2d");
+
+  let width = 0;
+  let height = 0;
+  let dots = [];
+
+  const GAP = 10;
+  const BASE_RADIUS = 1;
+  const SCALE_AMOUNT = 0.6; // 👈 how much dots grow
+  const SPEED = 0.002;      // 👈 animation speed
+
+  function resizeCanvas() {
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.parentElement.getBoundingClientRect();
+
+    width = rect.width;
+    height = rect.height;
+
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+
+    canvas.style.width = width + "px";
+    canvas.style.height = height + "px";
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    createDots();
+  }
+
+  function createDots() {
+    dots.length = 0;
+
+    const cols = Math.floor(width / GAP);
+    const rows = Math.floor(height / GAP);
+
+    for (let y = 0; y < rows; y++) {
+      for (let x = 0; x < cols; x++) {
+        dots.push({
+          x: x * GAP + GAP / 2,
+          y: y * GAP + GAP / 2,
+          phase: Math.random() * Math.PI * 2
+        });
+      }
+    }
+  }
+
+  function render(time) {
+    ctx.clearRect(0, 0, width, height);
+
+    const t = time * SPEED;
+
+    for (let i = 0; i < dots.length; i++) {
+      const d = dots[i];
+
+      const scale = 1 + Math.sin(t + d.phase) * SCALE_AMOUNT;
+      const radius = BASE_RADIUS * scale;
+
+      ctx.beginPath();
+      ctx.arc(d.x, d.y, radius, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(255,255,255,0.9)";
+      ctx.fill();
+    }
+
+    requestAnimationFrame(render);
+  }
+
+  window.addEventListener("resize", resizeCanvas);
+  resizeCanvas();
+  requestAnimationFrame(render);
+</script>
+
+</body>
+</html>

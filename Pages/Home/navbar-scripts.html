@@ -1,0 +1,49 @@
+<script>
+  // Navbar
+  document.addEventListener("DOMContentLoaded", () => {
+    const navs = document.querySelectorAll(".nav-link-wrapper");
+
+    navs.forEach((nav) => {
+      const navDot = nav.querySelector(".nav-link-dot");
+      const dropdown = nav.querySelector(".nav-link-dropdown");
+
+      // Measure actual content height
+      const height = dropdown.scrollHeight;
+      dropdown.style.setProperty("--menu-height", height + "px");
+
+      nav.addEventListener("mouseenter", () => {
+        dropdown.classList.add("is-open");
+        navDot.classList.add("active");
+      });
+
+      nav.addEventListener("mouseleave", () => {
+        dropdown.classList.remove("is-open");
+        navDot.classList.remove("active");
+      });
+
+      // Optional: recalc on resize
+      window.addEventListener("resize", () => {
+        const newHeight = dropdown.scrollHeight;
+        dropdown.style.setProperty("--menu-height", newHeight + "px");
+      });
+    });
+
+    // line height
+    var complete_height = gsap.utils.toArray("[vertical-line-fill]");
+    complete_height.forEach(function (element) {
+      let tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: element,
+          start: "top 95%",
+          end: "bottom -60%",
+          scrub: true,
+        },
+      });
+      tl.fromTo(
+        element,
+        { height: 0 },
+        { duration: 2, height: "100%", ease: "cubic" }
+      );
+    });
+  });
+</script>
