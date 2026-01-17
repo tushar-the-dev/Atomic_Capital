@@ -112,68 +112,93 @@
   //     y: 115,
   //     duration: 1,
   //     ease: "power2.out",
-  //     // scrollTrigger: {
-  //     //   trigger: headBlockWrapper,
-  //     //   start: "top top",
-  //     //   toggleActions: "play none reverse play",
-  //     // },
+  //     scrub: true,
+  //     scrollTrigger: {
+  //       trigger: headBlockWrapper,
+  //       start: "top top",
+  //       end: "+=50%"
+  //       // toggleActions: "play none reverse play",
+  //     },
   //   });
-
-  //   ScrollTrigger.create({
-  //   trigger: headBlockWrapper,
-  //   start: "top top",
-
-  //   onEnter: () => {
-  //     moveAside.play();
-  //   },
-
-  //   onLeaveBack: () => {
-  //     moveAside.reverse();
-  //   }
-
-  //   // markers: true
   // });
-  // });
+
+// document.addEventListener("DOMContentLoaded", function () {
+//   gsap.registerPlugin(ScrollTrigger);
+
+//   const wrapper = document.querySelector(".our-methodology-head-block-wrapper");
+//   const headBlock = document.querySelector(".our-methodology-head-block");
+
+//   const wrapperHeight = wrapper.offsetHeight;
+//   const headHeight = headBlock.offsetHeight;
+//   const startY = (wrapperHeight - headHeight) * 0.5;
+
+//   const wrapperWidth = wrapper.offsetWidth;
+//   const headWidth = headBlock.offsetWidth;
+//   const startX = (wrapperWidth - headWidth) * 0.5;
+
+//   // Initial position
+//   gsap.set(headBlock, { x: startX, y: startY });
+
+//   const moveAside = gsap.to(headBlock, {
+//     x: 0,
+//     y: 115,
+//     duration: 0.6,
+//     ease: "power2.out",
+//     paused: true
+//   });
+
+//   ScrollTrigger.create({
+//     trigger: wrapper,
+//     start: "top top",
+
+//     onEnter: () => {
+//       moveAside.play();
+//     },
+
+//     onLeaveBack: () => {
+//       moveAside.reverse();
+//     }
+
+//     // markers: true
+//   });
+// });
+
 document.addEventListener("DOMContentLoaded", function () {
   gsap.registerPlugin(ScrollTrigger);
 
-  const wrapper = document.querySelector(".our-methodology-head-block-wrapper");
+  const headBlockWrapper = document.querySelector(
+    ".our-methodology-head-block-wrapper"
+  );
   const headBlock = document.querySelector(".our-methodology-head-block");
 
-  const wrapperHeight = wrapper.offsetHeight;
-  const headHeight = headBlock.offsetHeight;
-  const startY = (wrapperHeight - headHeight) * 0.5;
+  const headBlockWrapperHeight = headBlockWrapper.offsetHeight;
+  const headBlockHeight = headBlock.offsetHeight;
+  const headBlockPositionY =
+    (headBlockWrapperHeight - headBlockHeight) * 0.5;
 
-  const wrapperWidth = wrapper.offsetWidth;
-  const headWidth = headBlock.offsetWidth;
-  const startX = (wrapperWidth - headWidth) * 0.5;
+  const headBlockWrapperWidth = headBlockWrapper.offsetWidth;
+  const headBlockWidth = headBlock.offsetWidth;
+  const headBlockPositionX =
+    (headBlockWrapperWidth - headBlockWidth) * 0.5;
 
-  // Initial position
-  gsap.set(headBlock, { x: startX, y: startY });
+  // Center initially
+  gsap.set(headBlock, {
+    x: headBlockPositionX,
+    y: headBlockPositionY,
+  });
 
-  const moveAside = gsap.to(headBlock, {
+  gsap.to(headBlock, {
     x: 0,
     y: 115,
-    duration: 0.6,
-    ease: "power2.out",
-    paused: true
-  });
-
-  ScrollTrigger.create({
-    trigger: wrapper,
-    start: "top top",
-
-    onEnter: () => {
-      moveAside.play();
+    ease: "none",
+    scrollTrigger: {
+      trigger: headBlockWrapper,
+      start: "top top",
+      end: () => "+=" + headBlockWrapper.offsetHeight * 0.5, // ✅ 50% of wrapper
+      scrub: true,
+      invalidateOnRefresh: true,
     },
-
-    onLeaveBack: () => {
-      moveAside.reverse();
-    }
-
-    // markers: true
   });
 });
-
 
 </script>
