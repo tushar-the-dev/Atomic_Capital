@@ -1,0 +1,179 @@
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    gsap.registerPlugin(ScrollTrigger, SplitText);
+
+    const philosophyContent = document.querySelector(
+      ".philosophy-content-wrapper",
+    );
+
+    const textProgress = document.getElementById("philosophy-text-progress");
+
+    const halfPhilosophySection = philosophyContent.offsetHeight * 0.5;
+    philosophyContent.style.top = `calc(50% - ${halfPhilosophySection}px)`;
+
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    let split;
+    let chars = [];
+    let total = 0;
+    let lastIndex = -1;
+
+    function initSplit() {
+      if (split) split.revert();
+
+      split = new SplitText(".philosophy-txt", {
+        type: "chars,words,lines",
+        charsClass: "char",
+        position: "relative",
+      });
+
+      chars = split.chars;
+      total = chars.length;
+      lastIndex = -1;
+    }
+
+    initSplit();
+
+    if (prefersReducedMotion) {
+      gsap.set(".char", { color: "#171717", opacity: 1 });
+    } else {
+      ScrollTrigger.create({
+        trigger: ".section_philosophy",
+        start: "top top",
+        end: "bottom bottom",
+        scrub: 0.4,
+        markers: false,
+
+        onUpdate(self) {
+          gsap.set(textProgress, {
+            height: `${self.progress * 100}%`,
+          });
+
+          const progress = self.progress * total;
+          const activeIndex = Math.floor(progress);
+
+          if (activeIndex === lastIndex) return;
+          lastIndex = activeIndex;
+
+          for (let i = 0; i < total; i++) {
+            const distance = progress - i;
+            const char = chars[i];
+
+            if (distance > 1) {
+              char.style.opacity = 1;
+            } else if (distance > 0) {
+              char.style.opacity = 0.4 + distance * 0.6;
+            } else {
+              char.style.opacity = 0.4;
+            }
+
+            char.style.color = "#171717";
+          }
+        },
+      });
+    }
+
+    let resizeTimeout;
+
+    window.addEventListener("resize", () => {
+      if (resizeTimeout) resizeTimeout.kill();
+
+      resizeTimeout = gsap.delayedCall(0.25, () => {
+        initSplit();
+        ScrollTrigger.refresh();
+      });
+    });
+  });
+
+  // document.addEventListener("DOMContentLoaded", function () {
+  //   const headBlockWrapper = document.querySelector(
+  //     ".our-methodology-head-block-wrapper",
+  //   );
+  //   const headBlock = document.querySelector(".our-methodology-head-block");
+
+  //   const headBlockWrapperHeight = headBlockWrapper.offsetHeight;
+  //   const headBlockHeight = headBlock.offsetHeight;
+  //   const headBlockPositionY = (headBlockWrapperHeight - headBlockHeight) * 0.5;
+
+  //   const headBlockWidth = headBlock.offsetWidth;
+  //   const headBlockWrapperWidth = headBlockWrapper.offsetWidth;
+  //   const headBlockPositionX = (headBlockWrapperWidth - headBlockWidth) * 0.5;
+
+  //   // headBlock.style.transform =  `translate(${headBlockPositionX}px, ${headBlockPositionY}px)`;
+
+  //   gsap.registerPlugin(ScrollTrigger);
+
+  //   gsap.set(headBlock, { x: headBlockPositionX, y: headBlockPositionY });
+
+  //   const moveAside = gsap.to(headBlock, {
+  //     x: 0,
+  //     y: 115,
+  //     duration: 1,
+  //     ease: "power2.out",
+  //     // scrollTrigger: {
+  //     //   trigger: headBlockWrapper,
+  //     //   start: "top top",
+  //     //   toggleActions: "play none reverse play",
+  //     // },
+  //   });
+
+  //   ScrollTrigger.create({
+  //   trigger: headBlockWrapper,
+  //   start: "top top",
+
+  //   onEnter: () => {
+  //     moveAside.play();
+  //   },
+
+  //   onLeaveBack: () => {
+  //     moveAside.reverse();
+  //   }
+
+  //   // markers: true
+  // });
+  // });
+document.addEventListener("DOMContentLoaded", function () {
+  gsap.registerPlugin(ScrollTrigger);
+
+  const wrapper = document.querySelector(".our-methodology-head-block-wrapper");
+  const headBlock = document.querySelector(".our-methodology-head-block");
+
+  const wrapperHeight = wrapper.offsetHeight;
+  const headHeight = headBlock.offsetHeight;
+  const startY = (wrapperHeight - headHeight) * 0.5;
+
+  const wrapperWidth = wrapper.offsetWidth;
+  const headWidth = headBlock.offsetWidth;
+  const startX = (wrapperWidth - headWidth) * 0.5;
+
+  // Initial position
+  gsap.set(headBlock, { x: startX, y: startY });
+
+  const moveAside = gsap.to(headBlock, {
+    x: 0,
+    y: 115,
+    duration: 0.6,
+    ease: "power2.out",
+    paused: true
+  });
+
+  ScrollTrigger.create({
+    trigger: wrapper,
+    start: "top top",
+
+    onEnter: () => {
+      moveAside.play();
+    },
+
+    onLeaveBack: () => {
+      moveAside.reverse();
+    }
+
+    // markers: true
+  });
+});
+
+
+</script>
